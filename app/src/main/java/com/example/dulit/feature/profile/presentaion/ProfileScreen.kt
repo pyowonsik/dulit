@@ -38,7 +38,6 @@ import com.example.dulit.core.ui.theme.Amber600
 import com.example.dulit.core.ui.theme.DulitTheme
 import com.example.dulit.core.ui.theme.customColorScheme
 
-// 임시 이미지 로딩을 위한 코드 (Coil, Glide 등 라이브러리 추가 전)
 @Composable
 fun rememberAsyncImagePainter(model: Any) = ColorPainter(Color.LightGray)
 
@@ -336,7 +335,6 @@ private fun MenuSection(navController: NavHostController) {
         MenuItem("알림 설정", Icons.Filled.Notifications, MaterialTheme.colorScheme.secondary) { /*TODO*/ }
         Divider(color = MaterialTheme.colorScheme.surfaceVariant)
         MenuItem("개인정보 보호", Icons.Filled.Lock, Amber600) { /*TODO*/ }
-        // ... (로그아웃 등 다른 메뉴 아이템) ...
     }
 }
 
@@ -361,6 +359,5 @@ private fun MenuItem(
         Spacer(modifier = Modifier.width(16.dp))
         Text(title, style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium), color = MaterialTheme.colorScheme.onBackground)
         Spacer(modifier = Modifier.weight(1f))
-        // ... (오른쪽 화살표 아이콘 등) ...
     }
 }

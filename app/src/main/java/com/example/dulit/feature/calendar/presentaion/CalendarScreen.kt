@@ -37,7 +37,6 @@ import java.util.Locale
 
 @Composable
 fun CalendarScreen() {
-    // [수정] DulitTheme으로 감싸서 디자인 시스템 적용
     DulitTheme {
         var selectedDate by remember { mutableStateOf(LocalDate.now()) }
         val currentMonth = remember { YearMonth.now() }
@@ -57,12 +56,10 @@ fun CalendarScreen() {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    // [수정] 커스텀 그라데이션 배경 적용
                     .background(brush = MaterialTheme.customColorScheme.gradientBackground)
             ) {
                 Text(
                     text = "데이트 기록",
-                    // [수정] 테마 스타일 및 색상 적용
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.secondary,
                     textAlign = TextAlign.Center,
@@ -149,7 +146,6 @@ private fun CalendarHeader(
             modifier = Modifier.weight(1f)
         )
         IconButton(onClick = onNextClicked) {
-            // [수정] 기존 Icons.Default 아이콘으로 복원
             Icon(Icons.Default.ChevronRight, contentDescription = "다음 달", tint = MaterialTheme.colorScheme.secondary)
         }
     }
