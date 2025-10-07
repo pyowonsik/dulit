@@ -2,14 +2,17 @@
 package com.example.dulit.feature.user.data.repository
 
 import android.util.Log
+import com.example.dulit.core.local.TokenStorage
 import com.example.dulit.feature.user.data.api.AuthApi
 import com.example.dulit.feature.user.data.model.KakaoLoginRequest
 import com.example.dulit.feature.user.data.model.UserDto
 import com.example.dulit.feature.user.domain.model.User
 import com.example.dulit.feature.user.domain.repository.UserRepository
+import javax.inject.Inject
 
-class UserRepositoryImpl(
-    private val authApi: AuthApi
+class UserRepositoryImpl @Inject constructor(
+    private val authApi: AuthApi,
+    private val tokenStorage: TokenStorage  // com.example.dulit.core.local.TokenStorage 주입
 ) : UserRepository {
 
     override suspend fun kakaoLogin(kakaoToken: String): Result<User> {
@@ -23,7 +26,12 @@ class UserRepositoryImpl(
                 Log.i("UserRepository", "로그인 성공: ${body.user.name}")
                 Log.i("UserRepository", "JWT: ${body.accessToken}")
 
-                // TODO: JWT 토큰 저장
+                // JWT 토큰 로컬 저장
+                tokenStorage.saveAccessToken(body.accessToken)
+                tokenStorage.saveRefreshToken(body.refreshToken)
+
+                Log.d("Login Token Info [Access]",tokenStorage.getAccessToken().toString())
+                Log.d("Login Token Info [Refresh]",tokenStorage.getRefreshToken().toString())
 
                 Result.success(body.user.toDomain())
             } else {

@@ -11,33 +11,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.dulit.R
-import com.example.dulit.core.network.RetrofitClient
 import com.example.dulit.core.ui.theme.DulitNavy
 import com.example.dulit.core.ui.theme.DulitNavy50
-import com.example.dulit.feature.user.data.repository.UserRepositoryImpl
-import com.example.dulit.feature.user.domain.usecase.KakaoLoginUseCase
 import com.example.dulit.navigation.Route
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.dulit.feature.user.data.api.AuthApi
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(
+    navController: NavHostController,
+    viewModel: LoginViewModel = hiltViewModel()
+) {
     val context = LocalContext.current
-
-    // 의존성 주입 (나중에 Hilt로 대체 가능)
-    val authApi = RetrofitClient.create(AuthApi::class.java)
-    val userRepository = UserRepositoryImpl(authApi)
-    val kakaoLoginUseCase = KakaoLoginUseCase(userRepository)
-    val viewModel: LoginViewModel = viewModel(
-        factory = LoginViewModelFactory(kakaoLoginUseCase)
-    )
-
     val loginState by viewModel.loginState.collectAsState()
 
     // 로그인 상태 관찰
