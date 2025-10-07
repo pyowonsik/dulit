@@ -2,6 +2,7 @@
 package com.example.dulit.di
 
 import android.content.Context
+import android.util.Log
 import com.example.dulit.core.local.TokenStorage
 import com.example.dulit.feature.user.data.api.AuthApi
 import dagger.Module
@@ -20,7 +21,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "http://192.168.45.42:3000/";
+    private const val BASE_URL = "http://192.168.45.42:3000/"
 
     @Provides
     @Singleton
@@ -38,33 +39,39 @@ object NetworkModule {
         }
     }
 
+    //    @Provides
+    //    @Singleton
+    //    fun provideOkHttpClient(
+    //        loggingInterceptor: HttpLoggingInterceptor
+    //    ): OkHttpClient {
+    //        return OkHttpClient.Builder()
+    //            .addInterceptor(loggingInterceptor)  // ⭐ 로깅만 유지
+    //            .connectTimeout(30, TimeUnit.SECONDS)
+    //            .readTimeout(30, TimeUnit.SECONDS)
+    //            .writeTimeout(30, TimeUnit.SECONDS)
+    //            .build()
+    //    }
+
     @Provides
     @Singleton
     fun provideOkHttpClient(
-        tokenStorage: TokenStorage,
-        loggingInterceptor: HttpLoggingInterceptor
+        tokenStorage: TokenStorage, loggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient {
-        return OkHttpClient.Builder()
-            .addInterceptor { chain ->
+        return OkHttpClient.Builder().addInterceptor { chain ->
                 val originalRequest = chain.request()
                 val token = tokenStorage.getAccessToken()
 
-                // JWT 토큰이 있으면 헤더에 추가
-                val newRequest = if (token != null) {
-                    originalRequest.newBuilder()
-                        .addHeader("Authorization", "Bearer $token")
-                        .build()
+                // ⭐ /auth로 시작하는 요청은 JWT 추가 안 함
+                val isAuthRequest = originalRequest.url.encodedPath.startsWith("/auth")
+
+                val newRequest = if (token != null && !isAuthRequest) {
+                    originalRequest.newBuilder().addHeader("Authorization", "Bearer $token").build()
                 } else {
                     originalRequest
                 }
 
                 chain.proceed(newRequest)
-            }
-            .addInterceptor(loggingInterceptor)
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .build()
+            }.addInterceptor(loggingInterceptor).build()
     }
 
     @Provides
@@ -72,11 +79,8 @@ object NetworkModule {
     fun provideRetrofit(
         okHttpClient: OkHttpClient
     ): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+        return Retrofit.Builder().baseUrl(BASE_URL).client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create()).build()
     }
 
     @Provides
