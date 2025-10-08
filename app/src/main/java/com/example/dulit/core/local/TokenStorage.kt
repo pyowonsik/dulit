@@ -26,13 +26,13 @@ class TokenStorage(private val context: Context) {
     companion object {
         private const val KEY_ACCESS_TOKEN = "access_token"
         private const val KEY_REFRESH_TOKEN = "refresh_token"
+        private const val KEY_SOCIAL_ID = "social_id"  // 👈 추가
     }
 
     fun saveAccessToken(token: String) {
         sharedPreferences.edit()
             .putString(KEY_ACCESS_TOKEN, token)
             .apply()
-
     }
 
     fun getAccessToken(): String? {
@@ -49,11 +49,26 @@ class TokenStorage(private val context: Context) {
         return sharedPreferences.getString(KEY_REFRESH_TOKEN, null)
     }
 
+    // 👇 socialId 관련 메서드 추가
+    fun saveSocialId(socialId: String) {
+        sharedPreferences.edit()
+            .putString(KEY_SOCIAL_ID, socialId)
+            .apply()
+    }
+
+    fun getSocialId(): String? {
+        return sharedPreferences.getString(KEY_SOCIAL_ID, null)
+    }
+
     fun clearTokens() {
         sharedPreferences.edit().clear().apply()
     }
 
     fun hasAccessToken(): Boolean {
         return getAccessToken() != null
+    }
+
+    fun hasSocialId(): Boolean {
+        return getSocialId() != null
     }
 }

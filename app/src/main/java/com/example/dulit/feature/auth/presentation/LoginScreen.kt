@@ -1,6 +1,8 @@
-package com.example.dulit.feature.user.presentaion
+// feature/auth/presentation/LoginScreen.kt
+package com.example.dulit.feature.auth.presentation
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,33 +18,69 @@ import androidx.navigation.NavHostController
 import com.example.dulit.R
 import com.example.dulit.core.ui.theme.DulitNavy
 import com.example.dulit.core.ui.theme.DulitNavy50
+import com.example.dulit.feature.user.presentation.ConnectBottomSheet  // 👈 추가 예정
+import com.example.dulit.feature.user.presentation.ConnectCoupleState
+import com.example.dulit.feature.user.presentation.ConnectCoupleViewModel
 import com.example.dulit.navigation.Route
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 
+// feature/auth/presentation/LoginScreen.kt
 @Composable
 fun LoginScreen(
     navController: NavHostController,
-    viewModel: LoginViewModel = hiltViewModel()
+    loginViewModel: LoginViewModel = hiltViewModel(),
+    connectCoupleViewModel: ConnectCoupleViewModel = hiltViewModel()  // 👈 추가
 ) {
     val context = LocalContext.current
-    val loginState by viewModel.loginState.collectAsState()
+    val loginState by loginViewModel.loginState.collectAsState()
+    val connectState by connectCoupleViewModel.connectState.collectAsState()  // 👈 상태 관찰
+
+    var showConnectModal by remember { mutableStateOf(false) }
+    var mySocialId by remember { mutableStateOf("") }
 
     // 로그인 상태 관찰
     LaunchedEffect(loginState) {
         when (loginState) {
-            is LoginState.Success -> {
-                val user = (loginState as LoginState.Success).user
-                Log.i("LoginScreen", "로그인 성공: ${user.name}")
+            is LoginState.AlreadyConnected -> {
+                val response = (loginState as LoginState.AlreadyConnected).response
+                Log.d("LoginScreen", "커플 연결됨: ${response.user.name}, isCouple: ${response.isCouple}")
                 navController.navigate(Route.Root.route) {
                     popUpTo(Route.Login.route) { inclusive = true }
                 }
             }
+
+
+            is LoginState.NeedConnection -> {
+                val response = (loginState as LoginState.NeedConnection).response
+                Log.d("LoginScreen", "커플 미연결: ${response.user.name}, isCouple: ${response.isCouple}")
+                mySocialId = response.user.socialId.toString()  // 👈 여기 수정!
+                showConnectModal = true
+            }
+
             is LoginState.Error -> {
-                Log.e("LoginScreen", (loginState as LoginState.Error).message)
-                // TODO: 에러 메시지를 UI에 표시
+                Toast.makeText(context, "로그인 실패", Toast.LENGTH_SHORT).show()
+            }
+
+            else -> {}
+        }
+    }
+
+    // 👇 커플 연결 상태 관찰
+    LaunchedEffect(connectState) {
+        when (connectState) {
+            is ConnectCoupleState.Success -> {
+                Toast.makeText(
+                    context,
+                    "연결 요청 완료! 알림을 기다려주세요",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            is ConnectCoupleState.Error -> {
+                val message = (connectState as ConnectCoupleState.Error).message
+                Toast.makeText(context, "연결 실패: $message", Toast.LENGTH_SHORT).show()
             }
             else -> {}
         }
@@ -53,9 +91,7 @@ fun LoginScreen(
         if (error != null) {
             Log.e("KakaoLogin", "카카오 로그인 실패", error)
         } else if (token != null) {
-            Log.i("KakaoLogin", "카카오 토큰: ${token.accessToken}")
-            // ViewModel을 통해 백엔드 로그인
-            viewModel.kakaoLogin(token.accessToken)
+            loginViewModel.kakaoLogin(token.accessToken)
         }
     }
 
@@ -112,45 +148,39 @@ fun LoginScreen(
                                 }
                             }
                     )
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(vertical = 32.dp)
-                    ) {
-                        Divider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.outlineVariant)
-                        Text(
-                            text = "또는",
-                            modifier = Modifier.padding(horizontal = 8.dp),
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Divider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.outlineVariant)
-                    }
-
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.naver_login_round),
-                            contentDescription = "네이버 로그인",
-                            modifier = Modifier.size(50.dp)
-                        )
-                        Spacer(modifier = Modifier.width(32.dp))
-                        Image(
-                            painter = painterResource(id = R.drawable.apple_login_round),
-                            contentDescription = "애플 로그인",
-                            modifier = Modifier.size(50.dp)
-                        )
-                    }
                 }
             }
 
-            // 로딩 인디케이터
-            if (loginState is LoginState.Loading) {
+            if (loginState is LoginState.Loading || connectState is ConnectCoupleState.Loading) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
         }
+    }
+
+    // 👇 Connect 모달 - 콜백으로 ViewModel 호출
+    if (showConnectModal) {
+        ConnectBottomSheet(
+            mySocialId = mySocialId,
+            onDismiss = {
+                if (connectState !is ConnectCoupleState.Loading) {
+                    showConnectModal = false
+                    loginViewModel.resetState()
+                    connectCoupleViewModel.resetState()
+                }
+            },
+            onConnect = { partnerCode ->
+                Log.d("LoginScreen", "커플 연결 콜백 → ViewModel 호출")
+                connectCoupleViewModel.connectCouple(partnerCode)  // 👈 ViewModel 호출
+            },
+            onMatchedNotification = {
+                Log.i("LoginScreen", "📩 매칭 알림 수신 → Home 이동")
+                showConnectModal = false
+                navController.navigate(Route.Root.route) {
+                    popUpTo(Route.Login.route) { inclusive = true }
+                }
+            }
+        )
     }
 }

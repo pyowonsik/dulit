@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.dulit.feature.user.presentaion.LoginScreen
+import com.example.dulit.feature.auth.presentation.LoginScreen
 
 @Composable
 fun DulitNavigation() {

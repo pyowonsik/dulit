@@ -4,5 +4,7 @@ package com.example.dulit.feature.user.domain.model
 data class User(
     val id: Long,
     val name: String,
-    val email: String
+    val email: String,
+    val socialId : String,
+//    val isConnected: Boolean = false  // 👈 추가!
 )

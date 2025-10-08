@@ -8,12 +8,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.dulit.feature.calendar.presentaion.CalendarScreen
-import com.example.dulit.feature.home.presentaion.HomeScreen
-import com.example.dulit.feature.post.presentaion.PostScreen
-import com.example.dulit.feature.profile.presentaion.ProfileScreen
+import com.example.dulit.feature.calendar.presentation.CalendarScreen
+import com.example.dulit.feature.home.presentation.HomeScreen
+import com.example.dulit.feature.post.presentation.PostScreen
+import com.example.dulit.feature.profile.presentation.ProfileScreen
 import com.example.dulit.core.ui.component.BottomNavigationBar
-import com.example.dulit.feature.chat.presentaion.ChatScreen
+import com.example.dulit.feature.chat.presentation.ChatScreen
 
 
 @Composable

@@ -92,6 +92,9 @@ dependencies {
     // Hilt Navigation Compose
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
+    // Socket.IO Client
+    implementation("io.socket:socket.io-client:2.1.0")
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

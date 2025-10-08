@@ -1,7 +1,8 @@
+// feature/user/domain/repository/UserRepository.kt
 package com.example.dulit.feature.user.domain.repository
 
-import com.example.dulit.feature.user.domain.model.User
+//import com.example.dulit.feature.user.data.model.ConnectCoupleResponse
 
 interface UserRepository {
-    suspend fun kakaoLogin(kakaoToken: String): Result<User>
+    suspend fun connectCouple(partnerId: String): Result<Boolean>
 }

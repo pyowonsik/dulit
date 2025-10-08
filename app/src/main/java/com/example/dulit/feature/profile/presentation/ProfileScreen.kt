@@ -1,4 +1,4 @@
-package com.example.dulit.feature.profile.presentaion
+package com.example.dulit.feature.profile.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,11 +28,9 @@ import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.dulit.core.ui.theme.Amber200
 import com.example.dulit.core.ui.theme.Amber600
 import com.example.dulit.core.ui.theme.DulitTheme

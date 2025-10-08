@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">dulit</string>
     <string name="kakao_native_app_key">f67d4ee94152133111e369bea72492a6</string>
+    <string name="kakao_oauth_scheme">kakaof67d4ee94152133111e369bea72492a6</string>
 </resources>

@@ -4,7 +4,8 @@ package com.example.dulit.di
 import android.content.Context
 import android.util.Log
 import com.example.dulit.core.local.TokenStorage
-import com.example.dulit.feature.user.data.api.AuthApi
+import com.example.dulit.feature.auth.data.api.AuthApi
+import com.example.dulit.feature.user.data.api.UserApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +15,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -89,5 +89,14 @@ object NetworkModule {
         retrofit: Retrofit
     ): AuthApi {
         return retrofit.create(AuthApi::class.java)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideUserApi(
+        retrofit: Retrofit
+    ): UserApi {
+        return retrofit.create(UserApi::class.java)
     }
 }

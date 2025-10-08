@@ -1,7 +1,7 @@
-package com.example.dulit.feature.user.data.api
+package com.example.dulit.feature.auth.data.api
 
-import com.example.dulit.feature.user.data.model.KakaoLoginRequest
-import com.example.dulit.feature.user.data.model.KakaoLoginResponse
+import com.example.dulit.feature.auth.data.model.KakaoLoginRequest
+import com.example.dulit.feature.auth.data.model.KakaoLoginResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.Response

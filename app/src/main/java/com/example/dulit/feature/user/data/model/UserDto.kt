@@ -11,5 +11,11 @@ data class UserDto(
     val name: String,
 
     @SerializedName("email")
-    val email: String
+    val email: String,
+
+    @SerializedName("socialId")
+    val socialId: String,
+//
+//    @SerializedName("isConnected")  // 👈 추가!
+//    val isConnected: Boolean = false
 )
