@@ -1,4 +1,3 @@
-// feature/auth/presentation/LoginScreen.kt
 package com.example.dulit.feature.auth.presentation
 
 import android.util.Log
@@ -18,10 +17,10 @@ import androidx.navigation.NavHostController
 import com.example.dulit.R
 import com.example.dulit.core.ui.theme.DulitNavy
 import com.example.dulit.core.ui.theme.DulitNavy50
-import com.example.dulit.feature.couple.presentation.ConnectBottomSheet  // 👈 변경!
-import com.example.dulit.feature.couple.presentation.ConnectCoupleState  // 👈 변경!
-import com.example.dulit.feature.couple.presentation.ConnectCoupleViewModel  // 👈 변경!
-import com.example.dulit.feature.couple.presentation.CoupleMatchingViewModel  // 👈 추가!
+import com.example.dulit.feature.couple.presentation.ConnectBottomSheet
+import com.example.dulit.feature.couple.presentation.ConnectCoupleState
+import com.example.dulit.feature.couple.presentation.ConnectCoupleViewModel
+import com.example.dulit.feature.couple.presentation.CoupleMatchingViewModel
 import com.example.dulit.navigation.Route
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
@@ -32,8 +31,8 @@ import com.kakao.sdk.user.UserApiClient
 fun LoginScreen(
     navController: NavHostController,
     loginViewModel: LoginViewModel = hiltViewModel(),
-    connectCoupleViewModel: ConnectCoupleViewModel = hiltViewModel(),  // 👈 couple 모듈
-    matchingViewModel: CoupleMatchingViewModel = hiltViewModel()  // 👈 couple 모듈로 변경!
+    connectCoupleViewModel: ConnectCoupleViewModel = hiltViewModel(),
+    matchingViewModel: CoupleMatchingViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val loginState by loginViewModel.loginState.collectAsState()
@@ -42,12 +41,19 @@ fun LoginScreen(
     var showConnectModal by remember { mutableStateOf(false) }
     var mySocialId by remember { mutableStateOf("") }
 
+    // 👇 화면 진입 시 자동 로그인 시도
+    LaunchedEffect(Unit) {
+        Log.d("LoginScreen", "🚀 화면 시작 - 자동 로그인 시도")
+        loginViewModel.autoLogin()
+    }
+
     // 로그인 상태 관찰
     LaunchedEffect(loginState) {
         when (loginState) {
+
             is LoginState.AlreadyConnected -> {
                 val response = (loginState as LoginState.AlreadyConnected).response
-                Log.d("LoginScreen", "커플 연결됨: ${response.user.name}, isCouple: ${response.isCouple}")
+                Log.d("LoginScreen", "✅ 커플 연결됨: ${response.user.name}, isCouple: ${response.isCouple}")
                 navController.navigate(Route.Root.route) {
                     popUpTo(Route.Login.route) { inclusive = true }
                 }
@@ -55,7 +61,7 @@ fun LoginScreen(
 
             is LoginState.NeedConnection -> {
                 val response = (loginState as LoginState.NeedConnection).response
-                Log.d("LoginScreen", "커플 미연결: ${response.user.name}, isCouple: ${response.isCouple}")
+                Log.d("LoginScreen", "❌ 커플 미연결: ${response.user.name}, isCouple: ${response.isCouple}")
                 mySocialId = response.user.socialId.toString()
                 showConnectModal = true
             }
@@ -97,60 +103,64 @@ fun LoginScreen(
 
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = "둘잇",
-                        style = MaterialTheme.typography.displayLarge,
-                        color = DulitNavy
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = "두 사람을 이어주는 특별한 공간",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = DulitNavy50
-                    )
-                }
-
+            // 👇 NeedLogin 또는 Error 상태일 때만 UI 표시
+            if (loginState is LoginState.NeedLogin || loginState is LoginState.Error) {
                 Column(
-                    modifier = Modifier.padding(all = 32.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.kakao_login),
-                        contentDescription = "카카오 로그인",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable(enabled = loginState !is LoginState.Loading) {
-                                if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
-                                    UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
-                                        if (error != null) {
-                                            if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
-                                                return@loginWithKakaoTalk
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = "둘잇",
+                            style = MaterialTheme.typography.displayLarge,
+                            color = DulitNavy
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "두 사람을 이어주는 특별한 공간",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = DulitNavy50
+                        )
+                    }
+
+                    Column(
+                        modifier = Modifier.padding(all = 32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.kakao_login),
+                            contentDescription = "카카오 로그인",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
+                                        UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
+                                            if (error != null) {
+                                                if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+                                                    return@loginWithKakaoTalk
+                                                }
+                                                UserApiClient.instance.loginWithKakaoAccount(
+                                                    context,
+                                                    callback = kakaoCallback
+                                                )
+                                            } else {
+                                                kakaoCallback(token, null)
                                             }
-                                            UserApiClient.instance.loginWithKakaoAccount(
-                                                context,
-                                                callback = kakaoCallback
-                                            )
-                                        } else {
-                                            kakaoCallback(token, null)
                                         }
+                                    } else {
+                                        UserApiClient.instance.loginWithKakaoAccount(
+                                            context,
+                                            callback = kakaoCallback
+                                        )
                                     }
-                                } else {
-                                    UserApiClient.instance.loginWithKakaoAccount(
-                                        context,
-                                        callback = kakaoCallback
-                                    )
                                 }
-                            }
-                    )
+                        )
+                    }
                 }
             }
 
+            // 👇 로딩 표시
             if (loginState is LoginState.Loading || connectState is ConnectCoupleState.Loading) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)
@@ -159,11 +169,11 @@ fun LoginScreen(
         }
     }
 
-    // 👇 couple 모듈의 ConnectBottomSheet 사용
+    // 커플 연결 모달
     if (showConnectModal) {
         ConnectBottomSheet(
             mySocialId = mySocialId,
-            matchingViewModel = matchingViewModel,  // 👈 couple 모듈의 ViewModel
+            matchingViewModel = matchingViewModel,
             onDismiss = {
                 if (connectState !is ConnectCoupleState.Loading) {
                     showConnectModal = false
@@ -178,7 +188,7 @@ fun LoginScreen(
             onMatchedNotification = {
                 Log.i("LoginScreen", "📩 매칭 알림 수신 → Home 이동")
                 showConnectModal = false
-                matchingViewModel.disconnectSocket()  // 👈 소켓 해제
+                matchingViewModel.disconnectSocket()
                 navController.navigate(Route.Root.route) {
                     popUpTo(Route.Login.route) { inclusive = true }
                 }

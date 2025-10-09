@@ -15,7 +15,10 @@ data class UserDto(
     val email: String,
 
     @SerializedName("socialId")
-    val socialId: String
+    val socialId: String,
+
+    @SerializedName("coupleId")
+    val coupleId: Long?
 )
 
 // 👇 DTO → Domain 변환 함수
@@ -24,6 +27,7 @@ fun UserDto.toDomain(): User {
         id = id,
         name = name,
         email = email,
-        socialId = socialId
+        socialId = socialId,
+        coupleId = coupleId
     )
 }
