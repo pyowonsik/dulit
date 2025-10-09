@@ -34,7 +34,13 @@ class CoupleMatchingViewModel @Inject constructor(
     }
 
     fun disconnectSocket() {
+        if (_matchingState.value is MatchingSocketState.Disconnected) {
+            Log.d("CoupleMatchingViewModel", "⏭️ 이미 해제됨 - 스킵")
+            return
+        }
+
         Log.d("CoupleMatchingViewModel", "🔌 매칭 소켓 연결 해제")
+
         disconnectMatchingSocketUseCase()
         _matchingState.value = MatchingSocketState.Disconnected
     }

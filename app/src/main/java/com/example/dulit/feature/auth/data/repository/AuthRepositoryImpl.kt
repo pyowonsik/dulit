@@ -17,67 +17,66 @@ class AuthRepositoryImpl @Inject constructor(
     private val tokenStorage: TokenStorage
 ) : AuthRepository {
 
-    override suspend fun kakaoLogin(kakaoToken: KakaoLoginRquest): Result<KakaoLoginResponse> {
-        return try {
-            val response = authApi.kakaoLogin(
-                KakaoLoginRequestDto(kakaoAccessToken = kakaoToken.kakaoAccessToken)
-            )
-            // 👇 RAW JSON 전체 로그
-            Log.d("AuthRepositoryImpl", "=== RAW RESPONSE ===")
-            Log.d("AuthRepositoryImpl", "Status Code: ${response.code()}")
-            Log.d("AuthRepositoryImpl", "Response Body: ${response.body()}")
-            Log.d("AuthRepositoryImpl", "Raw JSON: ${response.raw()}")
+    override suspend fun kakaoLogin(
+        kakaoToken: KakaoLoginRquest
+    ): Result<KakaoLoginResponse> = runCatching {
+        val response = authApi.kakaoLogin(
+            KakaoLoginRequestDto(kakaoAccessToken = kakaoToken.kakaoAccessToken)
+        )
 
-            if (response.isSuccessful && response.body() != null) {
-                val body = response.body()!!
+        // RAW JSON 전체 로그
+        Log.d("AuthRepositoryImpl", "=== RAW RESPONSE ===")
+        Log.d("AuthRepositoryImpl", "Status Code: ${response.code()}")
+        Log.d("AuthRepositoryImpl", "Response Body: ${response.body()}")
+        Log.d("AuthRepositoryImpl", "Raw JSON: ${response.raw()}")
 
-                Log.i("AuthRepositoryImpl", "로그인 성공: ${body.user.name}")
-                Log.i("AuthRepositoryImpl", "JWT: ${body.accessToken}")
-
-                // 👇 JWT 토큰 + socialId 저장
-                tokenStorage.saveAccessToken(body.accessToken)
-                tokenStorage.saveRefreshToken(body.refreshToken)
-                tokenStorage.saveSocialId(body.user.socialId)  // 👈 추가!
-
-                Log.d("AuthRepositoryImpl [User]", body.toString())
-                //  UserDto(id=2, name=표원식, email=qqrtyu@gmail.com, socialId=3904586188, isConnected=false)
-
-                Result.success(body.toDomain())
-            } else {
-                Log.e("AuthRepositoryImpl", "로그인 실패: ${response.code()}")
-                Result.failure(Exception("로그인 실패"))
-            }
-        } catch (e: Exception) {
-            Log.e("AuthRepositoryImpl", "네트워크 에러", e)
-            Result.failure(e)
+        if (!response.isSuccessful || response.body() == null) {
+            Log.e("AuthRepositoryImpl", "로그인 실패: ${response.code()}")
+            throw Exception("로그인 실패: ${response.code()}")
         }
+
+        val body = response.body()!!
+
+        Log.i("AuthRepositoryImpl", "로그인 성공: ${body.user.name}")
+        Log.i("AuthRepositoryImpl", "JWT: ${body.accessToken}")
+
+        // JWT 토큰 + socialId 저장
+        tokenStorage.saveAccessToken(body.accessToken)
+        tokenStorage.saveRefreshToken(body.refreshToken)
+        tokenStorage.saveSocialId(body.user.socialId)
+
+        Log.d("AuthRepositoryImpl [User]", body.toString())
+
+        // ⭐ 마지막 표현식이 자동으로 Result.success()
+        body.toDomain()
+    }.onFailure { e ->
+        Log.e("AuthRepositoryImpl", "카카오 로그인 에러", e)
     }
 
-    override suspend fun rotateAccessToken(): Result<RotateAccessTokenResponse> {
-        return try {
-            Log.d("AuthRepositoryImpl", "토큰 갱신 시작")
+    override suspend fun rotateAccessToken(): Result<RotateAccessTokenResponse> = runCatching {
+        Log.d("AuthRepositoryImpl", "토큰 갱신 시작")
 
-            // ⭐ 리프레시 토큰 가져오기
-            val refreshToken = tokenStorage.getRefreshToken()
-            if (refreshToken.isNullOrEmpty()) {
-                Log.e("AuthRepositoryImpl", "리프레시 토큰이 없습니다")
-                return Result.failure(Exception("리프레시 토큰이 없습니다"))
-            }
-
-            // ⭐ "Bearer <리프레시토큰>" 형식으로 API 호출
-            val responseDto = authApi.rotateAccessToken("Bearer $refreshToken")
-
-            // DTO → Domain Model 변환
-            val domainModel = responseDto.toDomain()
-
-            // 새 액세스 토큰 저장
-            tokenStorage.saveAccessToken(domainModel.accessToken)
-
-            Log.d("AuthRepositoryImpl", "토큰 갱신 성공: ${domainModel.accessToken.take(20)}...")
-            Result.success(domainModel)
-        } catch (e: Exception) {
-            Log.e("AuthRepositoryImpl", "토큰 갱신 실패", e)
-            Result.failure(e)
+        // 리프레시 토큰 가져오기
+        val refreshToken = tokenStorage.getRefreshToken()
+        if (refreshToken.isNullOrEmpty()) {
+            Log.e("AuthRepositoryImpl", "리프레시 토큰이 없습니다")
+            throw Exception("리프레시 토큰이 없습니다")
         }
+
+        // "Bearer <리프레시토큰>" 형식으로 API 호출
+        val responseDto = authApi.rotateAccessToken("Bearer $refreshToken")
+
+        // DTO → Domain Model 변환
+        val domainModel = responseDto.toDomain()
+
+        // 새 액세스 토큰 저장
+        tokenStorage.saveAccessToken(domainModel.accessToken)
+
+        Log.d("AuthRepositoryImpl", "토큰 갱신 성공: ${domainModel.accessToken.take(20)}...")
+
+        // ⭐ 마지막 표현식이 자동으로 Result.success()
+        domainModel
+    }.onFailure { e ->
+        Log.e("AuthRepositoryImpl", "토큰 갱신 실패", e)
     }
 }

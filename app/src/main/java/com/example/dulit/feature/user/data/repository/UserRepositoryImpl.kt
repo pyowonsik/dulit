@@ -12,19 +12,17 @@ class UserRepositoryImpl @Inject constructor(
     private val userApi: UserApi
 ) : UserRepository {
 
-    override suspend fun getMe(): Result<User> {
-        return try {
-            Log.d("UserRepository", "내 정보 조회 API 호출")
+    override suspend fun getMe(): Result<User> = runCatching {
+        Log.d("UserRepository", "내 정보 조회 API 호출")
 
-            val response = userApi.getMe()
-            Log.d("UserRepository", "✅ 내 정보 조회 성공: ${response.name}")
-            Log.d("UserRepository", "User: id=${response.id}, email=${response.email}, socialId=${response.socialId}")
+        val response = userApi.getMe()
 
-            Result.success(response.toDomain())
+        Log.d("UserRepository", "✅ 내 정보 조회 성공: ${response.name}")
+        Log.d("UserRepository", "User: id=${response.id}, email=${response.email}, socialId=${response.socialId}")
 
-        } catch (e: Exception) {
-            Log.e("UserRepository", "❌ 내 정보 조회 실패", e)
-            Result.failure(e)
-        }
+        // ⭐ 마지막 표현식이 자동으로 Result.success()
+        response.toDomain()
+    }.onFailure { e ->
+        Log.e("UserRepository", "❌ 내 정보 조회 실패", e)
     }
 }

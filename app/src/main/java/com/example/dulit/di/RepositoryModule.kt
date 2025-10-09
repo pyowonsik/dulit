@@ -3,6 +3,8 @@ package com.example.dulit.di
 
 import com.example.dulit.feature.auth.data.repository.AuthRepositoryImpl
 import com.example.dulit.feature.auth.domain.repository.AuthRepository
+import com.example.dulit.feature.calendar.data.repository.CalendarRepositoryImpl
+import com.example.dulit.feature.calendar.domain.repository.CalendarRepository
 import com.example.dulit.feature.couple.data.repository.CoupleMatchingRepositoryImpl
 import com.example.dulit.feature.couple.data.repository.CoupleRepositoryImpl
 import com.example.dulit.feature.couple.domain.repository.CoupleMatchingRepository
@@ -46,4 +48,12 @@ abstract class RepositoryModule {
     abstract fun bindCoupleMatchingRepository(
         coupleMatchingRepositoryImpl: CoupleMatchingRepositoryImpl
     ): CoupleMatchingRepository
+
+    // ⭐ Calendar Repository 추가
+    @Binds
+    @Singleton
+    abstract fun bindCalendarRepository(
+        calendarRepositoryImpl: CalendarRepositoryImpl
+    ): CalendarRepository
+
 }
