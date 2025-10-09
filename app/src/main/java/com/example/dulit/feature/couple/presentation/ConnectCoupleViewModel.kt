@@ -1,11 +1,10 @@
-// feature/user/presentation/ConnectCoupleViewModel.kt
-package com.example.dulit.feature.user.presentation
+// feature/couple/presentation/ConnectCoupleViewModel.kt
+package com.example.dulit.feature.couple.presentation
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-//import com.example.dulit.feature.user.data.model.ConnectCoupleResponse
-import com.example.dulit.feature.user.domain.usecase.ConnectCoupleUseCase
+import com.example.dulit.feature.couple.domain.usecase.ConnectCoupleUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

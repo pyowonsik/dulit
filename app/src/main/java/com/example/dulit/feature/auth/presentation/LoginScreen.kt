@@ -18,29 +18,26 @@ import androidx.navigation.NavHostController
 import com.example.dulit.R
 import com.example.dulit.core.ui.theme.DulitNavy
 import com.example.dulit.core.ui.theme.DulitNavy50
-import com.example.dulit.feature.chat.presentation.ChatViewModel
-import com.example.dulit.feature.user.presentation.ConnectBottomSheet  // 👈 추가 예정
-import com.example.dulit.feature.user.presentation.ConnectCoupleState
-import com.example.dulit.feature.user.presentation.ConnectCoupleViewModel
-import com.example.dulit.feature.user.presentation.ConnectSocketViewModel
+import com.example.dulit.feature.couple.presentation.ConnectBottomSheet  // 👈 변경!
+import com.example.dulit.feature.couple.presentation.ConnectCoupleState  // 👈 변경!
+import com.example.dulit.feature.couple.presentation.ConnectCoupleViewModel  // 👈 변경!
+import com.example.dulit.feature.couple.presentation.CoupleMatchingViewModel  // 👈 추가!
 import com.example.dulit.navigation.Route
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 
-// feature/auth/presentation/LoginScreen.kt
 @Composable
 fun LoginScreen(
     navController: NavHostController,
     loginViewModel: LoginViewModel = hiltViewModel(),
-    connectCoupleViewModel: ConnectCoupleViewModel = hiltViewModel(),  // 👈 추가
-    connectSocketViewModel : ConnectSocketViewModel = hiltViewModel()
-//    chatViewModel : ChatViewModel = hiltViewModel()
-    ) {
+    connectCoupleViewModel: ConnectCoupleViewModel = hiltViewModel(),  // 👈 couple 모듈
+    matchingViewModel: CoupleMatchingViewModel = hiltViewModel()  // 👈 couple 모듈로 변경!
+) {
     val context = LocalContext.current
     val loginState by loginViewModel.loginState.collectAsState()
-    val connectState by connectCoupleViewModel.connectState.collectAsState()  // 👈 상태 관찰
+    val connectState by connectCoupleViewModel.connectState.collectAsState()
 
     var showConnectModal by remember { mutableStateOf(false) }
     var mySocialId by remember { mutableStateOf("") }
@@ -56,11 +53,10 @@ fun LoginScreen(
                 }
             }
 
-
             is LoginState.NeedConnection -> {
                 val response = (loginState as LoginState.NeedConnection).response
                 Log.d("LoginScreen", "커플 미연결: ${response.user.name}, isCouple: ${response.isCouple}")
-                mySocialId = response.user.socialId.toString()  // 👈 여기 수정!
+                mySocialId = response.user.socialId.toString()
                 showConnectModal = true
             }
 
@@ -72,7 +68,7 @@ fun LoginScreen(
         }
     }
 
-    // 👇 커플 연결 상태 관찰
+    // 커플 연결 상태 관찰
     LaunchedEffect(connectState) {
         when (connectState) {
             is ConnectCoupleState.Success -> {
@@ -163,13 +159,13 @@ fun LoginScreen(
         }
     }
 
-    // 👇 Connect 모달 - 콜백으로 ViewModel 호출
+    // 👇 couple 모듈의 ConnectBottomSheet 사용
     if (showConnectModal) {
         ConnectBottomSheet(
             mySocialId = mySocialId,
+            matchingViewModel = matchingViewModel,  // 👈 couple 모듈의 ViewModel
             onDismiss = {
                 if (connectState !is ConnectCoupleState.Loading) {
-                    connectSocketViewModel.disconnectSocket()  // 👈 추가!
                     showConnectModal = false
                     loginViewModel.resetState()
                     connectCoupleViewModel.resetState()
@@ -177,13 +173,12 @@ fun LoginScreen(
             },
             onConnect = { partnerCode ->
                 Log.d("LoginScreen", "커플 연결 콜백 → ViewModel 호출")
-                connectCoupleViewModel.connectCouple(partnerCode)  // 👈 ViewModel 호출
+                connectCoupleViewModel.connectCouple(partnerCode)
             },
             onMatchedNotification = {
                 Log.i("LoginScreen", "📩 매칭 알림 수신 → Home 이동")
                 showConnectModal = false
-                connectSocketViewModel.disconnectSocket()  // 1️⃣ 알림 소켓 해제
-                // chatViewModel.connectChatSocket()          // 2️⃣ 채팅 소켓 연결
+                matchingViewModel.disconnectSocket()  // 👈 소켓 해제
                 navController.navigate(Route.Root.route) {
                     popUpTo(Route.Login.route) { inclusive = true }
                 }

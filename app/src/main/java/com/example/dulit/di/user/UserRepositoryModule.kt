@@ -1,9 +1,6 @@
-// di/RepositoryModule.kt
-package com.example.dulit.di
+// core/di/user/UserRepositoryModule.kt
+package com.example.dulit.di.user
 
-
-import com.example.dulit.feature.auth.data.repository.AuthRepositoryImpl
-import com.example.dulit.feature.auth.domain.repository.AuthRepository
 import com.example.dulit.feature.user.data.repository.UserRepositoryImpl
 import com.example.dulit.feature.user.domain.repository.UserRepository
 import dagger.Binds
@@ -14,13 +11,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class RepositoryModule {
-
-    @Binds
-    @Singleton
-    abstract fun bindAuthRepository(
-        authRepositoryImpl: AuthRepositoryImpl
-    ): AuthRepository
+abstract class UserRepositoryModule {
 
     @Binds
     @Singleton

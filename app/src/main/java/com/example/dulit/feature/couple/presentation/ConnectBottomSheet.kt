@@ -1,5 +1,5 @@
-// feature/user/presentation/ConnectBottomSheet.kt
-package com.example.dulit.feature.user.presentation
+// feature/couple/presentation/ConnectBottomSheet.kt
+package com.example.dulit.feature.couple.presentation
 
 import android.util.Log
 import android.widget.Toast
@@ -17,34 +17,35 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.dulit.core.ui.theme.DulitNavy
+import com.example.dulit.feature.couple.domain.repository.MatchingSocketState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConnectBottomSheet(
     mySocialId: String,
-    connectSocketViewModel: ConnectSocketViewModel = hiltViewModel(),  // 👈 ViewModel 추가
+    matchingViewModel: CoupleMatchingViewModel = hiltViewModel(),  // 👈 변경
     onDismiss: () -> Unit,
     onConnect: (String) -> Unit,
-    onMatchedNotification: () -> Unit  // 👈 추가
+    onMatchedNotification: () -> Unit
 ) {
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
     var partnerCode by remember { mutableStateOf("") }
     var showConfirmDialog by remember { mutableStateOf(false) }
 
-    // 👇 소켓 연결 상태 관찰
-    val connectionState by connectSocketViewModel.connectionState.collectAsState()
+    // 👇 매칭 소켓 상태 관찰
+    val matchingState by matchingViewModel.matchingState.collectAsState()
 
     // 👇 모달 열릴 때 소켓 연결
     LaunchedEffect(Unit) {
         Log.d("ConnectBottomSheet", "모달 열림 - 소켓 연결 시작")
-        connectSocketViewModel.connectSocket(mySocialId)
+        matchingViewModel.connectSocket(mySocialId)
     }
 
     // 👇 매칭 알림 감지
-    LaunchedEffect(connectionState) {
-        if (connectionState is ConnectionState.Matched) {
-            val message = (connectionState as ConnectionState.Matched).message
+    LaunchedEffect(matchingState) {
+        if (matchingState is MatchingSocketState.Matched) {
+            val message = (matchingState as MatchingSocketState.Matched).message
             Log.i("ConnectBottomSheet", "📩 매칭 완료: $message")
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             onMatchedNotification()
@@ -55,7 +56,7 @@ fun ConnectBottomSheet(
     DisposableEffect(Unit) {
         onDispose {
             Log.d("ConnectBottomSheet", "모달 닫힘 - 소켓 해제")
-            connectSocketViewModel.disconnectSocket()
+            matchingViewModel.disconnectSocket()
         }
     }
 
@@ -78,22 +79,22 @@ fun ConnectBottomSheet(
             )
 
             // 👇 연결 상태 표시
-            when (connectionState) {
-                is ConnectionState.Connected -> {
+            when (matchingState) {
+                is MatchingSocketState.Connected -> {
                     Text(
                         "✅ 알림 대기 중",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
-                is ConnectionState.Error -> {
+                is MatchingSocketState.Error -> {
                     Text(
                         "❌ 연결 실패",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.error
                     )
                 }
-                is ConnectionState.Idle -> {
+                is MatchingSocketState.Idle -> {
                     Text(
                         "🔌 연결 중...",
                         style = MaterialTheme.typography.bodySmall,

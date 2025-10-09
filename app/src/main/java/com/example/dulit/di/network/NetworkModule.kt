@@ -1,10 +1,10 @@
 // di/NetworkModule.kt
-package com.example.dulit.di
+package com.example.dulit.di.network
 
 import android.content.Context
-import android.util.Log
 import com.example.dulit.core.local.TokenStorage
 import com.example.dulit.feature.auth.data.api.AuthApi
+import com.example.dulit.feature.couple.data.api.CoupleApi
 import com.example.dulit.feature.user.data.api.UserApi
 import dagger.Module
 import dagger.Provides
@@ -20,16 +20,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
     private const val BASE_URL = "http://192.168.45.42:3000/"
-
-    @Provides
-    @Singleton
-    fun provideTokenStorage(
-        @ApplicationContext context: Context
-    ): TokenStorage {
-        return TokenStorage(context)
-    }
 
     @Provides
     @Singleton
@@ -38,19 +29,6 @@ object NetworkModule {
             level = HttpLoggingInterceptor.Level.BODY
         }
     }
-
-    //    @Provides
-    //    @Singleton
-    //    fun provideOkHttpClient(
-    //        loggingInterceptor: HttpLoggingInterceptor
-    //    ): OkHttpClient {
-    //        return OkHttpClient.Builder()
-    //            .addInterceptor(loggingInterceptor)  // ⭐ 로깅만 유지
-    //            .connectTimeout(30, TimeUnit.SECONDS)
-    //            .readTimeout(30, TimeUnit.SECONDS)
-    //            .writeTimeout(30, TimeUnit.SECONDS)
-    //            .build()
-    //    }
 
     @Provides
     @Singleton
@@ -83,20 +61,4 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create()).build()
     }
 
-    @Provides
-    @Singleton
-    fun provideAuthApi(
-        retrofit: Retrofit
-    ): AuthApi {
-        return retrofit.create(AuthApi::class.java)
-    }
-
-
-    @Provides
-    @Singleton
-    fun provideUserApi(
-        retrofit: Retrofit
-    ): UserApi {
-        return retrofit.create(UserApi::class.java)
-    }
 }

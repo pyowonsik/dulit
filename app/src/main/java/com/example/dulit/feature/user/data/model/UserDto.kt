@@ -1,6 +1,7 @@
 // feature/user/data/model/UserDto.kt
 package com.example.dulit.feature.user.data.model
 
+import com.example.dulit.feature.user.domain.model.User
 import com.google.gson.annotations.SerializedName
 
 data class UserDto(
@@ -14,8 +15,15 @@ data class UserDto(
     val email: String,
 
     @SerializedName("socialId")
-    val socialId: String,
-//
-//    @SerializedName("isConnected")  // 👈 추가!
-//    val isConnected: Boolean = false
+    val socialId: String
 )
+
+// 👇 DTO → Domain 변환 함수
+fun UserDto.toDomain(): User {
+    return User(
+        id = id,
+        name = name,
+        email = email,
+        socialId = socialId
+    )
+}
