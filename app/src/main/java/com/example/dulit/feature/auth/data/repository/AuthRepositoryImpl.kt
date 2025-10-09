@@ -4,8 +4,11 @@ package com.example.dulit.feature.auth.data.repository
 import android.util.Log
 import com.example.dulit.core.local.TokenStorage
 import com.example.dulit.feature.auth.data.api.AuthApi
-import com.example.dulit.feature.auth.data.model.KakaoLoginRequest
-import com.example.dulit.feature.auth.data.model.KakaoLoginResponse
+import com.example.dulit.feature.auth.data.model.KakaoLoginRequestDto
+import com.example.dulit.feature.auth.data.model.toDomain
+import com.example.dulit.feature.auth.domain.model.KakaoLoginResponse
+import com.example.dulit.feature.auth.domain.model.KakaoLoginRquest
+import com.example.dulit.feature.auth.domain.model.RotateAccessTokenResponse
 import com.example.dulit.feature.auth.domain.repository.AuthRepository
 import javax.inject.Inject
 
@@ -14,10 +17,10 @@ class AuthRepositoryImpl @Inject constructor(
     private val tokenStorage: TokenStorage
 ) : AuthRepository {
 
-    override suspend fun kakaoLogin(kakaoToken: String): Result<KakaoLoginResponse> {
+    override suspend fun kakaoLogin(kakaoToken: KakaoLoginRquest): Result<KakaoLoginResponse> {
         return try {
             val response = authApi.kakaoLogin(
-                KakaoLoginRequest(kakaoAccessToken = kakaoToken)
+                KakaoLoginRequestDto(kakaoAccessToken = kakaoToken.kakaoAccessToken)
             )
             // 👇 RAW JSON 전체 로그
             Log.d("AuthRepositoryImpl", "=== RAW RESPONSE ===")
@@ -39,13 +42,33 @@ class AuthRepositoryImpl @Inject constructor(
                   Log.d("AuthRepositoryImpl [User]", body.toString())
                 //  UserDto(id=2, name=표원식, email=qqrtyu@gmail.com, socialId=3904586188, isConnected=false)
 
-                Result.success(body)
+                Result.success(body.toDomain())
             } else {
                 Log.e("AuthRepositoryImpl", "로그인 실패: ${response.code()}")
                 Result.failure(Exception("로그인 실패"))
             }
         } catch (e: Exception) {
             Log.e("AuthRepositoryImpl", "네트워크 에러", e)
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun rotateAccessToken(): Result<RotateAccessTokenResponse> {
+        return try {
+            Log.d("AuthRepositoryImpl", "토큰 갱신 시작")
+
+            val responseDto = authApi.rotateAccessToken()
+
+            // DTO → Domain Model 변환
+            val domainModel = responseDto.toDomain()
+
+            // 새 액세스 토큰 저장
+            tokenStorage.saveAccessToken(domainModel.accessToken)
+
+            Log.d("AuthRepositoryImpl", "토큰 갱신 성공: ${domainModel.accessToken.take(20)}...")
+            Result.success(domainModel)
+        } catch (e: Exception) {
+            Log.e("AuthRepositoryImpl", "토큰 갱신 실패", e)
             Result.failure(e)
         }
     }

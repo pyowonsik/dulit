@@ -1,4 +1,4 @@
-package com.example.dulit.feature.auth.data.model
+package com.example.dulit.feature.auth.domain.model
 
 import com.example.dulit.feature.user.domain.model.User
 

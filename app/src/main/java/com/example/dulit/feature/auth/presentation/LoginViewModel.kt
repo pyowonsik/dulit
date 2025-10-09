@@ -4,7 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dulit.core.local.TokenStorage
-import com.example.dulit.feature.auth.data.model.KakaoLoginResponse
+import com.example.dulit.feature.auth.domain.model.KakaoLoginResponse
+import com.example.dulit.feature.auth.domain.model.KakaoLoginRquest
 import com.example.dulit.feature.auth.domain.usecase.KakaoLoginUseCase
 import com.example.dulit.feature.user.domain.usecase.GetMeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -72,7 +73,9 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             _loginState.value = LoginState.Loading
 
-            val result = kakaoLoginUseCase(kakaoToken)
+            val request = KakaoLoginRquest(kakaoToken)
+
+            val result = kakaoLoginUseCase(request)
 
             Log.d("LoginViewModel", "kakaoLogin: $result")
 
