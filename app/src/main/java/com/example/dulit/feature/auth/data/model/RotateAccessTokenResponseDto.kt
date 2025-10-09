@@ -6,7 +6,6 @@ data class RotateAccessTokenResponseDto(
     val accessToken: String
 )
 
-
 // 👇 DTO → Domain 변환 함수
 fun RotateAccessTokenResponseDto.toDomain(): RotateAccessTokenResponse {
     return RotateAccessTokenResponse(

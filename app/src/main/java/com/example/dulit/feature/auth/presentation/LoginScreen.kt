@@ -50,10 +50,11 @@ fun LoginScreen(
     // 로그인 상태 관찰
     LaunchedEffect(loginState) {
         when (loginState) {
-
             is LoginState.AlreadyConnected -> {
                 val response = (loginState as LoginState.AlreadyConnected).response
-                Log.d("LoginScreen", "✅ 커플 연결됨: ${response.user.name}, isCouple: ${response.isCouple}")
+                Log.d(
+                    "LoginScreen", "✅ 커플 연결됨: ${response.user.name}, isCouple: ${response.isCouple}"
+                )
                 navController.navigate(Route.Root.route) {
                     popUpTo(Route.Login.route) { inclusive = true }
                 }
@@ -61,7 +62,9 @@ fun LoginScreen(
 
             is LoginState.NeedConnection -> {
                 val response = (loginState as LoginState.NeedConnection).response
-                Log.d("LoginScreen", "❌ 커플 미연결: ${response.user.name}, isCouple: ${response.isCouple}")
+                Log.d(
+                    "LoginScreen", "❌ 커플 미연결: ${response.user.name}, isCouple: ${response.isCouple}"
+                )
                 mySocialId = response.user.socialId.toString()
                 showConnectModal = true
             }
@@ -77,17 +80,13 @@ fun LoginScreen(
     // 커플 연결 상태 관찰
     LaunchedEffect(connectState) {
         when (connectState) {
-            is ConnectCoupleState.Success -> {
-                Toast.makeText(
-                    context,
-                    "연결 요청 완료! 알림을 기다려주세요",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            is ConnectCoupleState.Success -> {}
+
             is ConnectCoupleState.Error -> {
                 val message = (connectState as ConnectCoupleState.Error).message
                 Toast.makeText(context, "연결 실패: $message", Toast.LENGTH_SHORT).show()
             }
+
             else -> {}
         }
     }
@@ -103,8 +102,8 @@ fun LoginScreen(
 
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Box(modifier = Modifier.fillMaxSize()) {
-            // 👇 NeedLogin 또는 Error 상태일 때만 UI 표시
-            if (loginState is LoginState.NeedLogin || loginState is LoginState.Error) {
+            // 👇 AlreadyConnected가 아닐 때만 UI 표시 (홈 이동 전까지)
+            if (loginState !is LoginState.CheckingAutoLogin && loginState !is LoginState.AlreadyConnected) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -133,7 +132,10 @@ fun LoginScreen(
                             contentDescription = "카카오 로그인",
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable {
+                                .clickable(
+                                    // 👇 로딩 중이거나 NeedConnection 상태일 때 클릭 불가
+                                    enabled = loginState !is LoginState.Loading && loginState !is LoginState.NeedConnection && connectState !is ConnectCoupleState.Loading
+                                ) {
                                     if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
                                         UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
                                             if (error != null) {
@@ -141,8 +143,7 @@ fun LoginScreen(
                                                     return@loginWithKakaoTalk
                                                 }
                                                 UserApiClient.instance.loginWithKakaoAccount(
-                                                    context,
-                                                    callback = kakaoCallback
+                                                    context, callback = kakaoCallback
                                                 )
                                             } else {
                                                 kakaoCallback(token, null)
@@ -150,18 +151,16 @@ fun LoginScreen(
                                         }
                                     } else {
                                         UserApiClient.instance.loginWithKakaoAccount(
-                                            context,
-                                            callback = kakaoCallback
+                                            context, callback = kakaoCallback
                                         )
                                     }
-                                }
-                        )
+                                })
                     }
                 }
             }
 
             // 👇 로딩 표시
-            if (loginState is LoginState.Loading || connectState is ConnectCoupleState.Loading) {
+            if (loginState is LoginState.Loading || connectState is ConnectCoupleState.Loading || loginState is LoginState.CheckingAutoLogin) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)
                 )
@@ -192,7 +191,6 @@ fun LoginScreen(
                 navController.navigate(Route.Root.route) {
                     popUpTo(Route.Login.route) { inclusive = true }
                 }
-            }
-        )
+            })
     }
 }

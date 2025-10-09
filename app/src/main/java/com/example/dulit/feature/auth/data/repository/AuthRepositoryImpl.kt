@@ -1,4 +1,4 @@
-// feature/user/data/repository/UserRepositoryImpl.kt
+// feature/auth/data/repository/AuthRepositoryImpl.kt
 package com.example.dulit.feature.auth.data.repository
 
 import android.util.Log
@@ -39,7 +39,7 @@ class AuthRepositoryImpl @Inject constructor(
                 tokenStorage.saveRefreshToken(body.refreshToken)
                 tokenStorage.saveSocialId(body.user.socialId)  // 👈 추가!
 
-                  Log.d("AuthRepositoryImpl [User]", body.toString())
+                Log.d("AuthRepositoryImpl [User]", body.toString())
                 //  UserDto(id=2, name=표원식, email=qqrtyu@gmail.com, socialId=3904586188, isConnected=false)
 
                 Result.success(body.toDomain())
@@ -57,7 +57,15 @@ class AuthRepositoryImpl @Inject constructor(
         return try {
             Log.d("AuthRepositoryImpl", "토큰 갱신 시작")
 
-            val responseDto = authApi.rotateAccessToken()
+            // ⭐ 리프레시 토큰 가져오기
+            val refreshToken = tokenStorage.getRefreshToken()
+            if (refreshToken.isNullOrEmpty()) {
+                Log.e("AuthRepositoryImpl", "리프레시 토큰이 없습니다")
+                return Result.failure(Exception("리프레시 토큰이 없습니다"))
+            }
+
+            // ⭐ "Bearer <리프레시토큰>" 형식으로 API 호출
+            val responseDto = authApi.rotateAccessToken("Bearer $refreshToken")
 
             // DTO → Domain Model 변환
             val domainModel = responseDto.toDomain()

@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val kakaoLoginUseCase: KakaoLoginUseCase,
@@ -22,59 +21,54 @@ class LoginViewModel @Inject constructor(
     val tokenStorage: TokenStorage
 ) : ViewModel() {
 
-    private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
+    private val _loginState = MutableStateFlow<LoginState>(LoginState.CheckingAutoLogin)  // 👈 초기 상태
     val loginState: StateFlow<LoginState> = _loginState
 
-    // 👇 자동 로그인 - 토큰 + 커플 검증
     fun autoLogin() {
         viewModelScope.launch {
+            // 👇 이미 CheckingAutoLogin 상태
             val accessToken = tokenStorage.getAccessToken()
-            Log.d("LoginViewModel", "토큰: $accessToken")
+            Log.d("LoginViewModel [autoLogin]", "토큰: $accessToken")
 
             if (accessToken.isNullOrEmpty()) {
-                Log.d("LoginViewModel", "❌ 토큰 없음 → NeedLogin")
+                Log.d("LoginViewModel [autoLogin]", "❌ 토큰 없음 → NeedLogin")
                 _loginState.value = LoginState.NeedLogin
                 return@launch
             }
 
-            _loginState.value = LoginState.Loading
-
             val result = getMeUseCase()
-            Log.d("LoginViewModel", "getMeUseCase 결과: $result")
+            Log.d("LoginViewModel [autoLogin]", "getMeUseCase 결과: $result")
 
             _loginState.value = if (result.isSuccess) {
                 val user = result.getOrThrow()
 
                 val response = KakaoLoginResponse(
                     user = user,
-                    isCouple = user.coupleId != null,  // 👈 커플 검증
+                    isCouple = user.coupleId != null,
                     accessToken = accessToken,
                     refreshToken = tokenStorage.getRefreshToken() ?: ""
                 )
 
-                // 👇 커플 여부에 따라 분기
                 if (response.isCouple) {
-                    Log.i("LoginViewModel", "✅ 자동 로그인 + 커플 연결 → Home")
+                    Log.i("LoginViewModel [autoLogin]", "✅ 자동 로그인 + 커플 연결 → Home")
                     LoginState.AlreadyConnected(response)
                 } else {
-                    Log.i("LoginViewModel", "✅ 자동 로그인 + 커플 미연결 → 연결 모달")
+                    Log.i("LoginViewModel [autoLogin]", "✅ 자동 로그인 + 커플 미연결 → 연결 모달")
                     LoginState.NeedConnection(response)
                 }
             } else {
-                Log.e("LoginViewModel", "❌ 토큰 검증 실패 → 로그인 필요")
+                Log.e("LoginViewModel [autoLogin]", "❌ 토큰 검증 실패 → 로그인 필요")
                 tokenStorage.clearTokens()
                 LoginState.NeedLogin
             }
         }
     }
 
-    // 👇 카카오 로그인 (기존)
     fun kakaoLogin(kakaoToken: String) {
         viewModelScope.launch {
-            _loginState.value = LoginState.Loading
+            _loginState.value = LoginState.Loading  // 👈 수동 로그인 로딩
 
             val request = KakaoLoginRquest(kakaoToken)
-
             val result = kakaoLoginUseCase(request)
 
             Log.d("LoginViewModel", "kakaoLogin: $result")
@@ -96,14 +90,14 @@ class LoginViewModel @Inject constructor(
     }
 
     fun resetState() {
-        _loginState.value = LoginState.Idle
+        _loginState.value = LoginState.NeedLogin
     }
 }
 
 sealed class LoginState {
-    object Idle : LoginState()
-    object Loading : LoginState()
+    object CheckingAutoLogin : LoginState()  // 👈 자동 로그인 체크 중
     object NeedLogin : LoginState()
+    object Loading : LoginState()  // 수동 로그인 중
     data class AlreadyConnected(val response: KakaoLoginResponse) : LoginState()
     data class NeedConnection(val response: KakaoLoginResponse) : LoginState()
     data class Error(val message: String) : LoginState()

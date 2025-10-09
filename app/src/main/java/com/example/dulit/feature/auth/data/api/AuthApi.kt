@@ -4,6 +4,7 @@ import com.example.dulit.feature.auth.data.model.KakaoLoginRequestDto
 import com.example.dulit.feature.auth.data.model.KakaoLoginResponseDto
 import com.example.dulit.feature.auth.data.model.RotateAccessTokenResponseDto
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.Response
 
@@ -15,5 +16,7 @@ interface AuthApi {
     ): Response<KakaoLoginResponseDto>
 
     @POST("auth/token/access")
-    suspend fun rotateAccessToken(): RotateAccessTokenResponseDto
+    suspend fun rotateAccessToken(
+        @Header("Authorization") refreshToken: String
+    ): RotateAccessTokenResponseDto
 }

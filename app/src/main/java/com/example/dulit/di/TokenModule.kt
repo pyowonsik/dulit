@@ -1,7 +1,8 @@
-package com.example.dulit.di.local
+package com.example.dulit.di
 
 import android.content.Context
 import com.example.dulit.core.local.TokenStorage
+import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,7 +13,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object TokenModule {
-
     @Provides
     @Singleton
     fun provideTokenStorage(
