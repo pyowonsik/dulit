@@ -1,4 +1,3 @@
-// feature/user/presentation/ConnectViewModel.kt
 package com.example.dulit.feature.user.presentation
 
 import android.util.Log
@@ -14,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ConnectViewModel @Inject constructor(
+class ConnectSocketViewModel @Inject constructor(
     private val tokenStorage: TokenStorage
 ) : ViewModel() {
 

@@ -18,9 +18,11 @@ import androidx.navigation.NavHostController
 import com.example.dulit.R
 import com.example.dulit.core.ui.theme.DulitNavy
 import com.example.dulit.core.ui.theme.DulitNavy50
+import com.example.dulit.feature.chat.presentation.ChatViewModel
 import com.example.dulit.feature.user.presentation.ConnectBottomSheet  // 👈 추가 예정
 import com.example.dulit.feature.user.presentation.ConnectCoupleState
 import com.example.dulit.feature.user.presentation.ConnectCoupleViewModel
+import com.example.dulit.feature.user.presentation.ConnectSocketViewModel
 import com.example.dulit.navigation.Route
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
@@ -32,8 +34,10 @@ import com.kakao.sdk.user.UserApiClient
 fun LoginScreen(
     navController: NavHostController,
     loginViewModel: LoginViewModel = hiltViewModel(),
-    connectCoupleViewModel: ConnectCoupleViewModel = hiltViewModel()  // 👈 추가
-) {
+    connectCoupleViewModel: ConnectCoupleViewModel = hiltViewModel(),  // 👈 추가
+    connectSocketViewModel : ConnectSocketViewModel = hiltViewModel()
+//    chatViewModel : ChatViewModel = hiltViewModel()
+    ) {
     val context = LocalContext.current
     val loginState by loginViewModel.loginState.collectAsState()
     val connectState by connectCoupleViewModel.connectState.collectAsState()  // 👈 상태 관찰
@@ -165,6 +169,7 @@ fun LoginScreen(
             mySocialId = mySocialId,
             onDismiss = {
                 if (connectState !is ConnectCoupleState.Loading) {
+                    connectSocketViewModel.disconnectSocket()  // 👈 추가!
                     showConnectModal = false
                     loginViewModel.resetState()
                     connectCoupleViewModel.resetState()
@@ -177,6 +182,8 @@ fun LoginScreen(
             onMatchedNotification = {
                 Log.i("LoginScreen", "📩 매칭 알림 수신 → Home 이동")
                 showConnectModal = false
+                connectSocketViewModel.disconnectSocket()  // 1️⃣ 알림 소켓 해제
+                // chatViewModel.connectChatSocket()          // 2️⃣ 채팅 소켓 연결
                 navController.navigate(Route.Root.route) {
                     popUpTo(Route.Login.route) { inclusive = true }
                 }

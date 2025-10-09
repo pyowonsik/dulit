@@ -22,7 +22,7 @@ import com.example.dulit.core.ui.theme.DulitNavy
 @Composable
 fun ConnectBottomSheet(
     mySocialId: String,
-    viewModel: ConnectViewModel = hiltViewModel(),  // 👈 ViewModel 추가
+    connectSocketViewModel: ConnectSocketViewModel = hiltViewModel(),  // 👈 ViewModel 추가
     onDismiss: () -> Unit,
     onConnect: (String) -> Unit,
     onMatchedNotification: () -> Unit  // 👈 추가
@@ -33,12 +33,12 @@ fun ConnectBottomSheet(
     var showConfirmDialog by remember { mutableStateOf(false) }
 
     // 👇 소켓 연결 상태 관찰
-    val connectionState by viewModel.connectionState.collectAsState()
+    val connectionState by connectSocketViewModel.connectionState.collectAsState()
 
     // 👇 모달 열릴 때 소켓 연결
     LaunchedEffect(Unit) {
         Log.d("ConnectBottomSheet", "모달 열림 - 소켓 연결 시작")
-        viewModel.connectSocket(mySocialId)
+        connectSocketViewModel.connectSocket(mySocialId)
     }
 
     // 👇 매칭 알림 감지
@@ -55,7 +55,7 @@ fun ConnectBottomSheet(
     DisposableEffect(Unit) {
         onDispose {
             Log.d("ConnectBottomSheet", "모달 닫힘 - 소켓 해제")
-            viewModel.disconnectSocket()
+            connectSocketViewModel.disconnectSocket()
         }
     }
 
