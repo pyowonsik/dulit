@@ -9,6 +9,8 @@ import com.example.dulit.feature.couple.data.repository.CoupleMatchingRepository
 import com.example.dulit.feature.couple.data.repository.CoupleRepositoryImpl
 import com.example.dulit.feature.couple.domain.repository.CoupleMatchingRepository
 import com.example.dulit.feature.couple.domain.repository.CoupleRepository
+import com.example.dulit.feature.post.data.repository.PostRepositoryImpl
+import com.example.dulit.feature.post.domain.repository.PostRepository
 import com.example.dulit.feature.user.data.repository.UserRepositoryImpl
 import com.example.dulit.feature.user.domain.repository.UserRepository
 import dagger.Binds
@@ -49,11 +51,18 @@ abstract class RepositoryModule {
         coupleMatchingRepositoryImpl: CoupleMatchingRepositoryImpl
     ): CoupleMatchingRepository
 
-    // ⭐ Calendar Repository 추가
+    // ⭐ Calendar Repository
     @Binds
     @Singleton
     abstract fun bindCalendarRepository(
         calendarRepositoryImpl: CalendarRepositoryImpl
     ): CalendarRepository
+
+    // ⭐ Post Repository
+    @Binds
+    @Singleton
+    abstract fun bindPostRepository(
+        postRepositoryImpl: PostRepositoryImpl
+    ): PostRepository
 
 }

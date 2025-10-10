@@ -6,6 +6,7 @@ import com.example.dulit.core.network.TokenAuthenticator
 import com.example.dulit.feature.auth.data.api.AuthApi
 import com.example.dulit.feature.calendar.data.api.CalendarApi
 import com.example.dulit.feature.couple.data.api.CoupleApi
+import com.example.dulit.feature.post.data.api.PostApi
 import com.example.dulit.feature.user.data.api.UserApi
 import dagger.Module
 import dagger.Provides
@@ -104,5 +105,19 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(CalendarApi::class.java)
+    }
+
+    // ⭐ PostApi도 일반 클라이언트 사용
+    @Provides
+    @Singleton
+    fun providePostApi(
+        @Named("MainOkHttpClient") okHttpClient: OkHttpClient
+    ): PostApi {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(PostApi::class.java)
     }
 }
