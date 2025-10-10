@@ -9,6 +9,10 @@ import com.example.dulit.feature.couple.data.repository.CoupleMatchingRepository
 import com.example.dulit.feature.couple.data.repository.CoupleRepositoryImpl
 import com.example.dulit.feature.couple.domain.repository.CoupleMatchingRepository
 import com.example.dulit.feature.couple.domain.repository.CoupleRepository
+import com.example.dulit.feature.home.data.repository.AnniversaryRepositoryImpl
+import com.example.dulit.feature.home.data.repository.PlanRepositoryImpl
+import com.example.dulit.feature.home.domain.repository.AnniversaryRepository
+import com.example.dulit.feature.home.domain.repository.PlanRepository
 import com.example.dulit.feature.post.data.repository.PostRepositoryImpl
 import com.example.dulit.feature.post.domain.repository.PostRepository
 import com.example.dulit.feature.user.data.repository.UserRepositoryImpl
@@ -64,5 +68,19 @@ abstract class RepositoryModule {
     abstract fun bindPostRepository(
         postRepositoryImpl: PostRepositoryImpl
     ): PostRepository
+
+    // ⭐ Anniversary Repository
+    @Binds
+    @Singleton
+    abstract fun bindAnniversaryRepository(
+        anniversaryRepositoryImpl: AnniversaryRepositoryImpl
+    ): AnniversaryRepository
+
+    // ⭐ Plan Repository
+    @Binds
+    @Singleton
+    abstract fun bindPlanRepository(
+        planRepositoryImpl: PlanRepositoryImpl
+    ): PlanRepository
 
 }
