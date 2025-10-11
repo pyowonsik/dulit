@@ -10,19 +10,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9c7ac11e-5e7f-4e75-9ec0-e5f0deac6d72" name="Changes" comment="feat : 로그인시 socket 입장 couple 연결 기능 적용">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/presentation/component/CalendarCard.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/presentation/component/CalendarTitleHeader.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/presentation/component/DetailCalendar.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.11.1/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.11.1/checksums/checksums.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.11.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.11.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.11.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.11.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.11.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.11.1/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/di/NetworkModule.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/di/NetworkModule.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/chat/presentation/ChatViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/chat/presentation/ChatViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/couple/data/remote/CoupleMatchingSocketClient.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/couple/data/remote/CoupleMatchingSocketClient.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/presentation/HomeScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/presentation/HomeScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/presentation/component/PagerNaviationButtons.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/presentation/component/PagerNaviationButtons.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/presentation/viewmodel/AnniversaryViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/presentation/viewmodel/AnniversaryViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/domain/model/Calendar.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/domain/model/Calendar.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/presentation/CalendarScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/presentation/CalendarScreen.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/presentation/viewmodel/PlanViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/presentation/viewmodel/PlanViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/post/presentation/PostScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/post/presentation/PostScreen.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

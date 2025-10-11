@@ -27,9 +27,6 @@ class PlanViewModel @Inject constructor(
     private val deletePlanUseCase: DeletePlanUseCase
 ) : ViewModel() {
 
-    private val _plans = MutableStateFlow<List<Plan>>(emptyList())
-    val plans: StateFlow<List<Plan>> = _plans.asStateFlow()
-
     private val _planState = MutableStateFlow<PlanState>(PlanState.Idle)
     val planState: StateFlow<PlanState> = _planState.asStateFlow()
 
@@ -50,8 +47,7 @@ class PlanViewModel @Inject constructor(
 
             result.onSuccess { plan ->
                 Log.d("PlanViewModel", "✅ 계획 생성 성공: ${plan.topic}")
-                _plans.value = _plans.value + plan
-                _planState.value = PlanState.Success
+                _planState.value = PlanState.Success(plan)
             }.onFailure { e ->
                 Log.e("PlanViewModel", "❌ 계획 생성 실패", e)
                 _planState.value = PlanState.Error(e.message ?: "계획 생성에 실패했습니다")
@@ -76,9 +72,7 @@ class PlanViewModel @Inject constructor(
 
             result.onSuccess { plans ->
                 Log.d("PlanViewModel", "✅ 계획 ${plans.size}개 조회 성공")
-
-                _plans.value = plans
-                _planState.value = PlanState.Success
+                _planState.value = PlanState.ListSuccess(plans)
             }.onFailure { e ->
                 Log.e("PlanViewModel", "❌ 계획 조회 실패", e)
                 _planState.value = PlanState.Error(e.message ?: "계획 조회에 실패했습니다")
@@ -98,7 +92,7 @@ class PlanViewModel @Inject constructor(
 
             result.onSuccess { plan ->
                 Log.d("PlanViewModel", "✅ 계획 조회 성공: ${plan.topic}")
-                _planState.value = PlanState.Success
+                _planState.value = PlanState.Success(plan)
             }.onFailure { e ->
                 Log.e("PlanViewModel", "❌ 계획 조회 실패", e)
                 _planState.value = PlanState.Error(e.message ?: "계획 조회에 실패했습니다")
@@ -122,11 +116,9 @@ class PlanViewModel @Inject constructor(
             val request = UpdatePlanRequest(topic = topic, location = location, time = time)
             val result = updatePlanUseCase(planId, request)
 
-            result.onSuccess { updatedPlan ->
-                _plans.value = _plans.value.map { plan ->
-                    if(plan.id == planId) updatedPlan else plan
-                }
-                _planState.value = PlanState.Success
+            result.onSuccess { plan ->
+                Log.d("PlanViewModel", "✅ 계획 수정 성공: ${plan.topic}")
+                _planState.value = PlanState.Success(plan)
             }.onFailure { e ->
                 Log.e("PlanViewModel", "❌ 계획 수정 실패", e)
                 _planState.value = PlanState.Error(e.message ?: "계획 수정에 실패했습니다")
@@ -146,8 +138,7 @@ class PlanViewModel @Inject constructor(
 
             result.onSuccess { deletedId ->
                 Log.d("PlanViewModel", "✅ 계획 삭제 성공: deletedId=$deletedId")
-                _plans.value = _plans.value.filter { it.id != deletedId}
-                _planState.value = PlanState.Success
+                _planState.value = PlanState.DeleteSuccess(deletedId)
             }.onFailure { e ->
                 Log.e("PlanViewModel", "❌ 계획 삭제 실패", e)
                 _planState.value = PlanState.Error(e.message ?: "계획 삭제에 실패했습니다")
@@ -169,6 +160,8 @@ class PlanViewModel @Inject constructor(
 sealed class PlanState {
     data object Idle : PlanState()
     data object Loading : PlanState()
-    data object Success : PlanState()
+    data class Success(val plan: Plan) : PlanState()
+    data class ListSuccess(val plans: List<Plan>) : PlanState()
+    data class DeleteSuccess(val deletedId: Int) : PlanState()
     data class Error(val message: String) : PlanState()
 }

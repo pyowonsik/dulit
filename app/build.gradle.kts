@@ -95,6 +95,9 @@ dependencies {
     // Socket.IO Client
     implementation("io.socket:socket.io-client:2.1.0")
 
+    // 이미지 로딩 라이브러리
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
