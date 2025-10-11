@@ -23,7 +23,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val BASE_URL = "http://192.168.45.42:3000/"
+    private const val BASE_URL = "http://192.168.0.32:3000/"
 
     // ⭐토큰 갱신 전용 클라이언트 (Authenticator 제외) ->  Header에 AcceesToken 추가 X
     @Provides

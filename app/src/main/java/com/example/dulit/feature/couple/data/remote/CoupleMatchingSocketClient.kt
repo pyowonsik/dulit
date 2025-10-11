@@ -18,7 +18,7 @@ class CoupleMatchingSocketClient @Inject constructor(
     private var socket: Socket? = null
 
     companion object {
-        private const val SOCKET_URL = "http://192.168.45.42:3000"
+        private const val SOCKET_URL = "http://192.168.0.32:3000"
     }
 
     fun connect(userId: String): Flow<MatchingSocketEvent> = callbackFlow {

@@ -19,7 +19,7 @@ fun PagerNavigationButtons(
     totalPages: Int,
     modifier: Modifier = Modifier,
     onPreviousClick: () -> Unit,
-    onNextClick: () -> Unit
+    onNextClick: () -> Unit,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween

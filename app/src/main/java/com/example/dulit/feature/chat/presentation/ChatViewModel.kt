@@ -28,7 +28,7 @@ class ChatViewModel @Inject constructor(
     val messages: StateFlow<List<ChatMessage>> = _messages
 
     private companion object {
-        const val SOCKET_URL = "http://192.168.45.42:3000"
+        const val SOCKET_URL = "http://192.168.0.32:3000"
     }
 
     fun connectChatSocket() {

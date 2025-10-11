@@ -38,7 +38,7 @@ data class Post(
     val imageUrl: String = "https://picsum.photos/seed/picsum/400/250", // 웹 이미지 URL
     val title: String = "남산타워 데이트 코스 추천해요! 💕",
     val content: String = "오늘 남산타워에 다녀왔는데 너무 좋았어요! 야경이 정말 예쁘고 분위기도 너무 로맨틱했어요. 다들 한번 가보세요~",
-    val tags: List<String> = listOf("남산타워", "데이트코스", "야경"),
+//    val tags: List<String> = listOf("남산타워", "데이트코스", "야경"),
     val likes: Int = 128,
     val comments: Int = 24,
 )
@@ -47,10 +47,13 @@ data class Post(
 fun PostScreen() {
     // [수정] DulitTheme으로 감싸서 디자인 시스템 적용
     DulitTheme {
+
+
         // 샘플 데이터
-        val categories = listOf("전체", "데이트 코스", "맛집", "여행", "기념일")
+//        val categories = listOf("전체", "데이트 코스", "맛집", "여행", "기념일")
         var selectedCategory by remember { mutableStateOf("전체") }
         val posts = remember { List(5) { index -> Post(id = index) } }
+
 
         Surface(modifier = Modifier.fillMaxSize()) {
             Box(
@@ -68,14 +71,14 @@ fun PostScreen() {
                         PostScreenHeader(onWritePostClick = { /* 글쓰기 화면으로 이동 */ })
                         Spacer(modifier = Modifier.height(16.dp))
                     }
-                    item {
-                        CategoryChips(
-                            categories = categories,
-                            selectedCategory = selectedCategory,
-                            onCategorySelected = { category -> selectedCategory = category }
-                        )
-                        Spacer(modifier = Modifier.height(20.dp))
-                    }
+//                    item {
+//                        CategoryChips(
+//                            categories = categories,
+//                            selectedCategory = selectedCategory,
+//                            onCategorySelected = { category -> selectedCategory = category }
+//                        )
+//                        Spacer(modifier = Modifier.height(20.dp))
+//                    }
                     items(posts) { post ->
                         EnhancedPostCard(post = post)
                         Spacer(modifier = Modifier.height(16.dp))
@@ -236,17 +239,17 @@ fun PostContent(post: Post) {
         Text(text = post.content, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onBackground)
         Spacer(modifier = Modifier.height(16.dp))
 
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            post.tags.forEach { tag ->
-                TagChip(label = tag)
-            }
-        }
+//        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+//            post.tags.forEach { tag ->
+//                TagChip(label = tag)
+//            }
+//        }
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             InteractionButton(icon = Icons.Default.FavoriteBorder, label = post.likes.toString(), color = MaterialTheme.colorScheme.primary)
             InteractionButton(icon = Icons.Default.ChatBubbleOutline, label = post.comments.toString(), color = MaterialTheme.colorScheme.secondary)
-            InteractionButton(icon = Icons.Default.BookmarkBorder, label = "저장", color = Amber800) // 버튼별 고유 색상은 직접 지정
+//            InteractionButton(icon = Icons.Default.BookmarkBorder, label = "저장", color = Amber800) // 버튼별 고유 색상은 직접 지정
         }
     }
 }
