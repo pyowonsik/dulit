@@ -1,9 +1,9 @@
 // feature/calendar/data/repository/CalendarRepositoryImpl.kt
 package com.example.dulit.feature.calendar.data.repository
 
-import com.example.dulit.feature.calendar.data.api.CalendarApi
-import com.example.dulit.feature.calendar.data.model.toDomain
-import com.example.dulit.feature.calendar.data.model.toDto
+import com.example.dulit.feature.calendar.data.remote.api.CalendarApi
+import com.example.dulit.feature.calendar.data.remote.dto.toDomain
+import com.example.dulit.feature.calendar.data.remote.dto.toDto
 import com.example.dulit.feature.calendar.domain.model.Calendar
 import com.example.dulit.feature.calendar.domain.model.CreateCalendarRequest
 import com.example.dulit.feature.calendar.domain.model.UpdateCalendarRequest

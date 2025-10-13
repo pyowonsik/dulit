@@ -4,6 +4,8 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.dulit.feature.home.data.local.dao.AnniversaryDao
 import com.example.dulit.feature.home.data.local.entity.AnniversaryEntity
+import com.example.dulit.feature.calendar.data.local.dao.CalendarDao
+import com.example.dulit.feature.calendar.data.local.entity.CalendarEntity
 
 /**
  * Dulit App의 Room Database
@@ -13,16 +15,16 @@ import com.example.dulit.feature.home.data.local.entity.AnniversaryEntity
 @Database(
     entities = [
         AnniversaryEntity::class,
+        CalendarEntity::class, // ✅ 추가
         // PlanEntity::class, // 나중에 추가
-        // CalendarEntity::class, // 나중에 추가
         // ChatMessageEntity::class, // 나중에 추가
     ],
-    version = 1,
+    version = 2, // ✅ 버전 올림
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun anniversaryDao(): AnniversaryDao
+    abstract fun calendarDao(): CalendarDao // ✅ 추가
     // abstract fun planDao(): PlanDao
-    // abstract fun calendarDao(): CalendarDao
     // abstract fun chatDao(): ChatDao
 }

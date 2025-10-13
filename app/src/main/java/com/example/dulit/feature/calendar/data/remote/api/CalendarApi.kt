@@ -1,8 +1,8 @@
-package com.example.dulit.feature.calendar.data.api
+package com.example.dulit.feature.calendar.data.remote.api
 
-import com.example.dulit.feature.calendar.data.model.CalendarResponseDto
-import com.example.dulit.feature.calendar.data.model.CreateCalendarRequestDto
-import com.example.dulit.feature.calendar.data.model.UpdateCalendarRequestDto
+import com.example.dulit.feature.calendar.data.remote.dto.CalendarResponseDto
+import com.example.dulit.feature.calendar.data.remote.dto.CreateCalendarRequestDto
+import com.example.dulit.feature.calendar.data.remote.dto.UpdateCalendarRequestDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

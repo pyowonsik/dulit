@@ -10,33 +10,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9c7ac11e-5e7f-4e75-9ec0-e5f0deac6d72" name="Changes" comment="feat : 로그인시 socket 입장 couple 연결 기능 적용">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/core/local/database/AppDataBase.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/di/DatabaseModule.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/local/dao/AnniversaryDao.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/local/entity/AnniversaryEntity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.11.1/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.11.1/checksums/checksums.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/data/local/dao/CalendarDao.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/data/local/entity/CalendarEntity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.11.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.11.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.11.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.11.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.11.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.11.1/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/core/local/database/AppDataBase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/core/local/database/AppDataBase.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/di/DatabaseModule.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/di/DatabaseModule.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/di/NetworkModule.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/di/NetworkModule.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/presentation/CalendarScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/presentation/CalendarScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/presentation/component/CalendarTitleHeader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/presentation/component/CalendarScreenHeader.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/api/AnniversaryApi.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/remote/api/AnniversaryApi.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/api/PlanApi.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/remote/api/PlanApi.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/model/AnniversaryResponseDto.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/remote/dto/AnniversaryResponseDto.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/model/CreateAnniversaryRequestDto.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/remote/dto/CreateAnniversaryRequestDto.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/model/CreatePlanRequestDto.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/remote/dto/CreatePlanRequestDto.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/model/PlanResponseDto.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/remote/dto/PlanResponseDto.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/model/UpdateAnniversaryRequestDto.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/remote/dto/UpdateAnniversaryRequestDto.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/model/UpdatePlanRequestDto.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/remote/dto/UpdatePlanRequestDto.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/repository/AnniversaryRepositoryImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/repository/AnniversaryRepositoryImpl.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/repository/PlanRepositoryImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/data/repository/PlanRepositoryImpl.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/domain/model/Anniversary.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/home/domain/model/Anniversary.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/post/presentation/PostScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/post/presentation/PostScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/data/api/CalendarApi.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/data/remote/api/CalendarApi.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/data/model/CalendarResponseDto.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/data/remote/dto/CalendarResponseDto.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/data/model/CreateCalendarRequestDto.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/data/remote/dto/CreateCalendarRequestDto.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/data/model/UpdateCalendarRequestDto.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/data/remote/dto/UpdateCalendarRequestDto.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/data/repository/CalendarRepositoryImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dulit/feature/calendar/data/repository/CalendarRepositoryImpl.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +34,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=/Users/pyowonsik/.android/avd/flutter_emulator.avd)]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=PhysicalDevice, isTemplate=false, identifier=serial=R54T404ZSYJ)]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -73,10 +61,10 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Kotlin Object" />
-        <option value="Kotlin Data Class" />
         <option value="Kotlin Interface" />
         <option value="Kotlin File" />
         <option value="Kotlin Class" />
+        <option value="Kotlin Data Class" />
       </list>
     </option>
   </component>

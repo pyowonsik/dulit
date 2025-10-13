@@ -1,10 +1,10 @@
-// di/DatabaseModule.kt
 package com.example.dulit.di
 
 import android.content.Context
 import androidx.room.Room
 import com.example.dulit.core.local.database.AppDatabase
 import com.example.dulit.feature.home.data.local.dao.AnniversaryDao
+import com.example.dulit.feature.calendar.data.local.dao.CalendarDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,5 +34,12 @@ object DatabaseModule {
     @Singleton
     fun provideAnniversaryDao(database: AppDatabase): AnniversaryDao {
         return database.anniversaryDao()
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideCalendarDao(database: AppDatabase): CalendarDao {
+        return database.calendarDao()
     }
 }

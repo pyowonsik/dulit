@@ -1,4 +1,4 @@
-package com.example.dulit.feature.calendar.data.model
+package com.example.dulit.feature.calendar.data.remote.dto
 
 import com.example.dulit.feature.calendar.domain.model.Calendar
 import com.google.gson.annotations.SerializedName
