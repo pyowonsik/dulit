@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -85,9 +86,15 @@ dependencies {
     // AndroidX Security
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
 
+    
+    // Room
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
+
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.48")
-    kapt("com.google.dagger:hilt-android-compiler:2.48")
+    implementation("com.google.dagger:hilt-android:2.50")
+    kapt("com.google.dagger:hilt-android-compiler:2.50")
 
     // Hilt Navigation Compose
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
@@ -97,6 +104,7 @@ dependencies {
 
     // 이미지 로딩 라이브러리
     implementation("io.coil-kt:coil-compose:2.5.0")
+
 
     // Testing
     testImplementation(libs.junit)

@@ -1,5 +1,6 @@
-package com.example.dulit.feature.home.data.model
+package com.example.dulit.feature.home.data.remote.dto
 
+import com.example.dulit.feature.home.domain.model.Plan
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -28,8 +29,8 @@ data class PlanResponseDto(
 /**
  * DTO → Domain Model 변환
  */
-fun PlanResponseDto.toDomain(): com.example.dulit.feature.home.domain.model.Plan {
-    return com.example.dulit.feature.home.domain.model.Plan(
+fun PlanResponseDto.toDomain(): Plan {
+    return Plan(
         id = id,
         topic = topic,
         location = location,

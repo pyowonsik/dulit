@@ -1,8 +1,8 @@
-package com.example.dulit.feature.home.data.api
+package com.example.dulit.feature.home.data.remote.api
 
-import com.example.dulit.feature.home.data.model.CreatePlanRequestDto
-import com.example.dulit.feature.home.data.model.PlanResponseDto
-import com.example.dulit.feature.home.data.model.UpdatePlanRequestDto
+import com.example.dulit.feature.home.data.remote.dto.CreatePlanRequestDto
+import com.example.dulit.feature.home.data.remote.dto.PlanResponseDto
+import com.example.dulit.feature.home.data.remote.dto.UpdatePlanRequestDto
 import retrofit2.Response
 import retrofit2.http.*
 

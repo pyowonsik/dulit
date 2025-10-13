@@ -8,7 +8,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CalendarTitleHeader() {
+fun CalendarScreenHeader() {
     Text(
         text = "데이트 기록",
         style = MaterialTheme.typography.headlineMedium,

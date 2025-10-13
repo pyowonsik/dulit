@@ -1,8 +1,8 @@
-package com.example.dulit.feature.home.data.api
+package com.example.dulit.feature.home.data.remote.api
 
-import com.example.dulit.feature.home.data.model.AnniversaryResponseDto
-import com.example.dulit.feature.home.data.model.CreateAnniversaryRequestDto
-import com.example.dulit.feature.home.data.model.UpdateAnniversaryRequestDto
+import com.example.dulit.feature.home.data.remote.dto.AnniversaryResponseDto
+import com.example.dulit.feature.home.data.remote.dto.CreateAnniversaryRequestDto
+import com.example.dulit.feature.home.data.remote.dto.UpdateAnniversaryRequestDto
 import retrofit2.Response
 import retrofit2.http.*
 

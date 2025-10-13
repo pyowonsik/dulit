@@ -1,9 +1,9 @@
 package com.example.dulit.feature.home.data.repository
 
 import android.util.Log
-import com.example.dulit.feature.home.data.api.PlanApi
-import com.example.dulit.feature.home.data.model.toDomain
-import com.example.dulit.feature.home.data.model.toDto
+import com.example.dulit.feature.home.data.remote.api.PlanApi
+import com.example.dulit.feature.home.data.remote.dto.toDomain
+import com.example.dulit.feature.home.data.remote.dto.toDto
 import com.example.dulit.feature.home.domain.model.CreatePlanRequest
 import com.example.dulit.feature.home.domain.model.Plan
 import com.example.dulit.feature.home.domain.model.UpdatePlanRequest

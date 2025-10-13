@@ -6,8 +6,8 @@ import com.example.dulit.core.network.TokenAuthenticator
 import com.example.dulit.feature.auth.data.api.AuthApi
 import com.example.dulit.feature.calendar.data.api.CalendarApi
 import com.example.dulit.feature.couple.data.api.CoupleApi
-import com.example.dulit.feature.home.data.api.AnniversaryApi
-import com.example.dulit.feature.home.data.api.PlanApi
+import com.example.dulit.feature.home.data.remote.api.AnniversaryApi
+import com.example.dulit.feature.home.data.remote.api.PlanApi
 import com.example.dulit.feature.post.data.api.PostApi
 import com.example.dulit.feature.user.data.api.UserApi
 import dagger.Module
@@ -23,7 +23,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val BASE_URL = "http://192.168.0.32:3000/"
+    private const val BASE_URL = "http://192.168.45.42:3000/"
 
     // ⭐토큰 갱신 전용 클라이언트 (Authenticator 제외) ->  Header에 AcceesToken 추가 X
     @Provides
@@ -80,6 +80,7 @@ object NetworkModule {
             .build()
             .create(UserApi::class.java)
     }
+
 
     // ⭐ CoupleApi도 일반 클라이언트 사용
     @Provides

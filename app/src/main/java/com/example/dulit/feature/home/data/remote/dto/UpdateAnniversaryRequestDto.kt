@@ -1,5 +1,6 @@
-package com.example.dulit.feature.home.data.model
+package com.example.dulit.feature.home.data.remote.dto
 
+import com.example.dulit.feature.home.domain.model.UpdateAnniversaryRequest
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -16,7 +17,7 @@ data class UpdateAnniversaryRequestDto(
 /**
  * Domain Model → DTO 변환
  */
-fun com.example.dulit.feature.home.domain.model.UpdateAnniversaryRequest.toDto(): UpdateAnniversaryRequestDto {
+fun UpdateAnniversaryRequest.toDto(): UpdateAnniversaryRequestDto {
     return UpdateAnniversaryRequestDto(
         title = title,
         date = date

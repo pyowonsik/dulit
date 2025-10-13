@@ -1,9 +1,9 @@
 package com.example.dulit.feature.home.data.repository
 
 import android.util.Log
-import com.example.dulit.feature.home.data.api.AnniversaryApi
-import com.example.dulit.feature.home.data.model.toDomain
-import com.example.dulit.feature.home.data.model.toDto
+import com.example.dulit.feature.home.data.remote.api.AnniversaryApi
+import com.example.dulit.feature.home.data.remote.dto.toDomain
+import com.example.dulit.feature.home.data.remote.dto.toDto
 import com.example.dulit.feature.home.domain.model.Anniversary
 import com.example.dulit.feature.home.domain.model.CreateAnniversaryRequest
 import com.example.dulit.feature.home.domain.model.UpdateAnniversaryRequest
