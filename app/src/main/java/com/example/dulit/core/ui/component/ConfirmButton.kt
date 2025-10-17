@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun ConfirmButton(
-    text: String,
+//    text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -31,7 +31,7 @@ fun ConfirmButton(
         )
     ) {
         Text(
-            text = text,
+            text = "생성 하기",
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold
         )

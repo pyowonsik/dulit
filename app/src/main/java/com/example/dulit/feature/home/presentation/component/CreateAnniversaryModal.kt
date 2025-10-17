@@ -1,5 +1,6 @@
 package com.example.dulit.feature.home.presentation.component
 
+import ConfirmButton
 import android.app.DatePickerDialog
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.dulit.core.ui.component.CancelButton
 import com.example.dulit.core.ui.theme.customColorScheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -372,72 +374,37 @@ fun CreateAnniversaryModal(
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         // 취소 버튼
-                        OutlinedButton(
-                            onClick = onDismiss,
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(56.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                contentColor = MaterialTheme.colorScheme.onSurface
-                            ),
-                            border = ButtonDefaults.outlinedButtonBorder.copy(
-                                width = 1.5.dp,
-                                brush = androidx.compose.ui.graphics.SolidColor(
-                                    MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
-                                )
-                            )
-                        ) {
-                            Text(
-                                text = "취소",
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
+                        CancelButton(
+                            onCancel = onDismiss,
+                            modifier = Modifier.weight(1f)
+                        )
 
                         // 생성 버튼
-                        Button(
-                            onClick = {
-                                // 유효성 검사
-                                var hasError = false
+                       ConfirmButton(
+                           onClick = {
+                               // 유효성 검사
+                               var hasError = false
 
-                                if (title.isBlank()) {
-                                    titleError = true
-                                    hasError = true
-                                }
+                               if (title.isBlank()) {
+                                   titleError = true
+                                   hasError = true
+                               }
 
-                                if (selectedDate == null) {
-                                    dateError = true
-                                    hasError = true
-                                }
+                               if (selectedDate == null) {
+                                   dateError = true
+                                   hasError = true
+                               }
 
-                                if (!hasError) {
-                                    // ISO 8601 형식으로 변환
-                                    val formattedDate = selectedDate!!.format(
-                                        DateTimeFormatter.ISO_LOCAL_DATE
-                                    )
-                                    onCreate(title.trim(), formattedDate)
-                                }
-                            },
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(56.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = MaterialTheme.colorScheme.onPrimary
-                            ),
-                            elevation = ButtonDefaults.buttonElevation(
-                                defaultElevation = 4.dp,
-                                pressedElevation = 8.dp
-                            )
-                        ) {
-                            Text(
-                                text = "추가하기 ✨",
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
+                               if (!hasError) {
+                                   // ISO 8601 형식으로 변환
+                                   val formattedDate = selectedDate!!.format(
+                                       DateTimeFormatter.ISO_LOCAL_DATE
+                                   )
+                                   onCreate(title.trim(), formattedDate)
+                               }
+                           },
+                           modifier = Modifier.weight(1f)
+                       )
                     }
                 }
             }

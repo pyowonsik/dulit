@@ -1,5 +1,6 @@
 package com.example.dulit.feature.home.presentation.component
 
+import ConfirmButton
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import androidx.compose.animation.*
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.dulit.core.ui.component.CancelButton
 import com.example.dulit.core.ui.theme.customColorScheme
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -322,18 +324,19 @@ fun CreatePlanModal(
                             Surface(
                                 onClick = {
                                     val year = selectedDate?.year ?: calendar.get(Calendar.YEAR)
-                                    val month = selectedDate?.monthValue?.minus(1) ?: calendar.get(Calendar.MONTH)
-                                    val day = selectedDate?.dayOfMonth ?: calendar.get(Calendar.DAY_OF_MONTH)
+                                    val month = selectedDate?.monthValue?.minus(1) ?: calendar.get(
+                                        Calendar.MONTH
+                                    )
+                                    val day = selectedDate?.dayOfMonth
+                                        ?: calendar.get(Calendar.DAY_OF_MONTH)
 
                                     DatePickerDialog(
-                                        context,
-                                        { _, selectedYear, selectedMonth, selectedDay ->
-                                            selectedDate = LocalDate.of(selectedYear, selectedMonth + 1, selectedDay)
+                                        context, { _, selectedYear, selectedMonth, selectedDay ->
+                                            selectedDate = LocalDate.of(
+                                                selectedYear, selectedMonth + 1, selectedDay
+                                            )
                                             dateTimeError = false
-                                        },
-                                        year,
-                                        month,
-                                        day
+                                        }, year, month, day
                                     ).show()
                                 },
                                 modifier = Modifier
@@ -350,24 +353,30 @@ fun CreatePlanModal(
                                 border = if (dateTimeError) {
                                     ButtonDefaults.outlinedButtonBorder.copy(
                                         width = 2.dp,
-                                        brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.error)
+                                        brush = androidx.compose.ui.graphics.SolidColor(
+                                            MaterialTheme.colorScheme.error
+                                        )
                                     )
                                 } else if (selectedDate != null) {
                                     ButtonDefaults.outlinedButtonBorder.copy(
                                         width = 1.5.dp,
-                                        brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f))
+                                        brush = androidx.compose.ui.graphics.SolidColor(
+                                            MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f)
+                                        )
                                     )
                                 } else {
                                     ButtonDefaults.outlinedButtonBorder.copy(
                                         width = 1.dp,
-                                        brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
+                                        brush = androidx.compose.ui.graphics.SolidColor(
+                                            MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
+                                        )
                                     )
                                 }
                             ) {
                                 Column(
                                     modifier = Modifier
                                         .fillMaxSize()
-                                        .padding(16.dp),
+                                        .padding(horizontal = 12.dp, vertical = 10.dp),
                                     verticalArrangement = Arrangement.Center,
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
@@ -379,11 +388,12 @@ fun CreatePlanModal(
                                         } else {
                                             MaterialTheme.colorScheme.onSurfaceVariant
                                         },
-                                        modifier = Modifier.size(24.dp)
+                                        modifier = Modifier.size(22.dp)
                                     )
-                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Spacer(modifier = Modifier.height(6.dp))
                                     Text(
-                                        text = selectedDate?.format(DateTimeFormatter.ofPattern("MM/dd")) ?: "날짜",
+                                        text = selectedDate?.format(DateTimeFormatter.ofPattern("MM/dd"))
+                                            ?: "날짜",
                                         style = MaterialTheme.typography.bodyMedium,
                                         fontWeight = if (selectedDate != null) FontWeight.Bold else FontWeight.Normal,
                                         color = if (selectedDate != null) {
@@ -395,21 +405,20 @@ fun CreatePlanModal(
                                 }
                             }
 
-                            // 시간 선택
+// 시간 선택
                             Surface(
                                 onClick = {
-                                    val hour = selectedTime?.hour ?: calendar.get(Calendar.HOUR_OF_DAY)
-                                    val minute = selectedTime?.minute ?: calendar.get(Calendar.MINUTE)
+                                    val hour =
+                                        selectedTime?.hour ?: calendar.get(Calendar.HOUR_OF_DAY)
+                                    val minute =
+                                        selectedTime?.minute ?: calendar.get(Calendar.MINUTE)
 
                                     TimePickerDialog(
-                                        context,
-                                        { _, selectedHour, selectedMinute ->
-                                            selectedTime = LocalTime.of(selectedHour, selectedMinute)
+                                        context, { _, selectedHour, selectedMinute ->
+                                            selectedTime =
+                                                LocalTime.of(selectedHour, selectedMinute)
                                             dateTimeError = false
-                                        },
-                                        hour,
-                                        minute,
-                                        false
+                                        }, hour, minute, false
                                     ).show()
                                 },
                                 modifier = Modifier
@@ -426,24 +435,30 @@ fun CreatePlanModal(
                                 border = if (dateTimeError) {
                                     ButtonDefaults.outlinedButtonBorder.copy(
                                         width = 2.dp,
-                                        brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.error)
+                                        brush = androidx.compose.ui.graphics.SolidColor(
+                                            MaterialTheme.colorScheme.error
+                                        )
                                     )
                                 } else if (selectedTime != null) {
                                     ButtonDefaults.outlinedButtonBorder.copy(
                                         width = 1.5.dp,
-                                        brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f))
+                                        brush = androidx.compose.ui.graphics.SolidColor(
+                                            MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f)
+                                        )
                                     )
                                 } else {
                                     ButtonDefaults.outlinedButtonBorder.copy(
                                         width = 1.dp,
-                                        brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
+                                        brush = androidx.compose.ui.graphics.SolidColor(
+                                            MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
+                                        )
                                     )
                                 }
                             ) {
                                 Column(
                                     modifier = Modifier
                                         .fillMaxSize()
-                                        .padding(16.dp),
+                                        .padding(horizontal = 12.dp, vertical = 10.dp),
                                     verticalArrangement = Arrangement.Center,
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
@@ -455,11 +470,12 @@ fun CreatePlanModal(
                                         } else {
                                             MaterialTheme.colorScheme.onSurfaceVariant
                                         },
-                                        modifier = Modifier.size(24.dp)
+                                        modifier = Modifier.size(22.dp)
                                     )
-                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Spacer(modifier = Modifier.height(6.dp))
                                     Text(
-                                        text = selectedTime?.format(DateTimeFormatter.ofPattern("HH:mm")) ?: "시간",
+                                        text = selectedTime?.format(DateTimeFormatter.ofPattern("HH:mm"))
+                                            ?: "시간",
                                         style = MaterialTheme.typography.bodyMedium,
                                         fontWeight = if (selectedTime != null) FontWeight.Bold else FontWeight.Normal,
                                         color = if (selectedTime != null) {
@@ -500,78 +516,43 @@ fun CreatePlanModal(
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         // 취소 버튼
-                        OutlinedButton(
-                            onClick = onDismiss,
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(56.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                contentColor = MaterialTheme.colorScheme.onSurface
-                            ),
-                            border = ButtonDefaults.outlinedButtonBorder.copy(
-                                width = 1.5.dp,
-                                brush = androidx.compose.ui.graphics.SolidColor(
-                                    MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
-                                )
-                            )
-                        ) {
-                            Text(
-                                text = "취소",
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
+                        CancelButton(
+                            onCancel = onDismiss,
+                            modifier = Modifier.weight(1f)
+                        )
 
                         // 생성 버튼
-                        Button(
-                            onClick = {
-                                // 유효성 검사
-                                var hasError = false
+                       ConfirmButton(
+                          onClick =  {
+                               // 유효성 검사
+                               var hasError = false
 
-                                if (topic.isBlank()) {
-                                    topicError = true
-                                    hasError = true
-                                }
+                               if (topic.isBlank()) {
+                                   topicError = true
+                                   hasError = true
+                               }
 
-                                if (location.isBlank()) {
-                                    locationError = true
-                                    hasError = true
-                                }
+                               if (location.isBlank()) {
+                                   locationError = true
+                                   hasError = true
+                               }
 
-                                if (selectedDate == null || selectedTime == null) {
-                                    dateTimeError = true
-                                    hasError = true
-                                }
+                               if (selectedDate == null || selectedTime == null) {
+                                   dateTimeError = true
+                                   hasError = true
+                               }
 
-                                if (!hasError) {
-                                    // LocalDateTime 생성 및 ISO 형식으로 변환
-                                    val dateTime = LocalDateTime.of(selectedDate!!, selectedTime!!)
-                                    val formattedDateTime = dateTime.format(
-                                        DateTimeFormatter.ISO_LOCAL_DATE_TIME
-                                    )
-                                    onCreate(topic.trim(), location.trim(), formattedDateTime)
-                                }
-                            },
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(56.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.tertiary,
-                                contentColor = MaterialTheme.colorScheme.onTertiary
-                            ),
-                            elevation = ButtonDefaults.buttonElevation(
-                                defaultElevation = 4.dp,
-                                pressedElevation = 8.dp
-                            )
-                        ) {
-                            Text(
-                                text = "약속 잡기 💕",
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
+                               if (!hasError) {
+                                   // LocalDateTime 생성 및 ISO 형식으로 변환
+                                   val dateTime = LocalDateTime.of(selectedDate!!, selectedTime!!)
+                                   val formattedDateTime = dateTime.format(
+                                       DateTimeFormatter.ISO_LOCAL_DATE_TIME
+                                   )
+                                   onCreate(topic.trim(), location.trim(), formattedDateTime)
+                               }
+                           },
+                           modifier = Modifier.weight(1f)
+                       )
                     }
                 }
             }
