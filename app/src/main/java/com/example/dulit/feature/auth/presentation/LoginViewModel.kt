@@ -21,21 +21,38 @@ class LoginViewModel @Inject constructor(
     val tokenStorage: TokenStorage
 ) : ViewModel() {
 
-    private val _loginState = MutableStateFlow<LoginState>(LoginState.CheckingAutoLogin)  // 👈 초기 상태
+    private val _loginState = MutableStateFlow<LoginState>(LoginState.CheckingAutoLogin)
     val loginState: StateFlow<LoginState> = _loginState
 
+    /**
+     * 자동 로그인
+     * 
+     * 동작:
+     * 1. AccessToken, RefreshToken 존재 여부 확인
+     * 2. getMeUseCase()로 사용자 정보 조회
+     * 3. 만약 AccessToken 만료 시 → TokenAuthenticator가 자동으로 갱신
+     * 
+     * 책임 분리:
+     * - LoginViewModel: 토큰 존재 여부만 확인
+     * - TokenAuthenticator: 401 에러 시 자동 토큰 갱신
+     */
     fun autoLogin() {
         viewModelScope.launch {
-            // 👇 이미 CheckingAutoLogin 상태
             val accessToken = tokenStorage.getAccessToken()
-            Log.d("LoginViewModel [autoLogin]", "토큰: $accessToken")
+            val refreshToken = tokenStorage.getRefreshToken()
+            
+            Log.d("LoginViewModel [autoLogin]", "AccessToken 존재: ${!accessToken.isNullOrEmpty()}")
+            Log.d("LoginViewModel [autoLogin]", "RefreshToken 존재: ${!refreshToken.isNullOrEmpty()}")
 
-            if (accessToken.isNullOrEmpty()) {
+            // ✅ 둘 다 있어야 자동 로그인 가능
+            if (accessToken.isNullOrEmpty() || refreshToken.isNullOrEmpty()) {
                 Log.d("LoginViewModel [autoLogin]", "❌ 토큰 없음 → NeedLogin")
                 _loginState.value = LoginState.NeedLogin
                 return@launch
             }
 
+            // ✅ 사용자 정보 조회
+            // (AccessToken 만료 시 TokenAuthenticator가 자동으로 갱신)
             val result = getMeUseCase()
             Log.d("LoginViewModel [autoLogin]", "getMeUseCase 결과: $result")
 
@@ -45,8 +62,8 @@ class LoginViewModel @Inject constructor(
                 val response = KakaoLoginResponse(
                     user = user,
                     isCouple = user.coupleId != null,
-                    accessToken = accessToken,
-                    refreshToken = tokenStorage.getRefreshToken() ?: ""
+                    accessToken = tokenStorage.getAccessToken() ?: "",  // ✅ 갱신된 토큰 사용
+                    refreshToken = refreshToken
                 )
 
                 if (response.isCouple) {
@@ -57,7 +74,7 @@ class LoginViewModel @Inject constructor(
                     LoginState.NeedConnection(response)
                 }
             } else {
-                Log.e("LoginViewModel [autoLogin]", "❌ 토큰 검증 실패 → 로그인 필요")
+                Log.e("LoginViewModel [autoLogin]", "❌ 사용자 정보 조회 실패 → 로그인 필요")
                 tokenStorage.clearTokens()
                 LoginState.NeedLogin
             }
