@@ -1,6 +1,7 @@
 package com.example.dulit.feature.home.presentation
 
 import SectionCard
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,87 +12,85 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.dulit.core.ui.theme.DulitTheme
 import com.example.dulit.core.ui.theme.customColorScheme
-import com.example.dulit.feature.home.domain.model.Anniversary
-import com.example.dulit.feature.home.domain.model.Plan
+import com.example.dulit.feature.calendar.presentation.component.CreateCalendarModal
 import com.example.dulit.feature.home.presentation.component.AnniversaryCard
+import com.example.dulit.feature.home.presentation.component.CreateAnniversaryModal
 import com.example.dulit.feature.home.presentation.component.DatePlanItemRow
 import com.example.dulit.feature.home.presentation.component.PagerNavigationButtons
+import com.example.dulit.feature.home.presentation.viewmodel.AnniversaryState
+import com.example.dulit.feature.home.presentation.viewmodel.AnniversaryViewModel
+import com.example.dulit.feature.home.presentation.viewmodel.PlanState
+import com.example.dulit.feature.home.presentation.viewmodel.PlanViewModel
 import kotlinx.coroutines.launch
-
-// Data classes (DdayItem, DatePlanItem) are unchanged...
-data class DdayItem(
-    val title: String,
-    val days: String,
-    val date: String,
-    val emoji: String,
-)
-
-data class DatePlanItem(
-    val emoji: String,
-    val title: String,
-    val date: String,
-)
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    anniversaryViewModel: AnniversaryViewModel = hiltViewModel(),
+    planViewModel: PlanViewModel = hiltViewModel()
+) {
     // [수정] DulitTheme으로 감싸서 디자인 시스템 적용
     DulitTheme {
 
-//        // Sample data remains the same...
-//        val ddayItems = remember {
-//            listOf(
-//                DdayItem(title = "우리 만난지", days = "D+924", date = "2022.08.04", emoji = "❤️"),
-//                DdayItem(title = "여행", days = "D-13", date = "2025.04.02", emoji = "✈️"),
-//                DdayItem(title = "1000일", days = "D-76", date = "2025.06.27", emoji = "🎉"),
-//            )
-//        }
+        val context = LocalContext.current
 
-//        val datePlans = remember {
-//            listOf(
-//                DatePlanItem(emoji = "🎬", title = "영화 보기", date = "2025년 2월 14일 (수)"),
-//                DatePlanItem(emoji = "🍚", title = "떡도리탕 먹으러 가기", date = "2025년 2월 15일 (목)"),
-//            )
-//        }
+        /* anniversaryViewModel State , anniversaries 데이터 수집 */
 
+        // anniversaryState 상태 감지
+        val anniversaryState by anniversaryViewModel.anniversaryState.collectAsState()
+        // anniversaries flow 데이터 접근 가능
+        val anniversaries by anniversaryViewModel.anniversaries.collectAsState()
 
-        // ViewModel 데이터로 수정
-        // ViewModel에서 flow MutableListOf로 데이터 crud 달아주면 됨.
-        val anniversary : Anniversary = remember {
-            Anniversary(
-                id = 1,
-                title = "우리 만난지",
-                date = "2022.08.04",
-                createdAt = "2025.02.07",
-                updatedAt = "2025.02.07"
-            )
+        // planState 상태 감지
+        val planState by planViewModel.planState.collectAsState()
+        // plans flow 데이터 접근 가능
+        val plans by planViewModel.plans.collectAsState()
+
+        // 모달 관리 boolean 변수
+        var showCreateAnniversaryModal by remember { mutableStateOf(false) }
+        var showCreatePlanModal by remember { mutableStateOf(false) }
+
+        // 초기 데이터 로드 : Composable 처음 시작될 때 딱 1번만 실행
+        LaunchedEffect(Unit) {
+            anniversaryViewModel.getAnniversaries()
+            planViewModel.getPlans()
+
+            Log.d("HomeScreen", "anniversaries 데이터 로드 : ${anniversaries.toString()}")
         }
 
-        val plans  = remember {
-            listOf(
-                Plan(
-                    id = 1,
-                    topic = "영화 보기",
-                    location = "강남",
-                    time = "2025.04.30",
-                    createdAt = "2025.02.07",
-                    updatedAt = "2025.02.07"
-                )
-            )
+        LaunchedEffect(anniversaryState) {
+            when (anniversaryState) {
+                is AnniversaryState.Success -> {}
+                is AnniversaryState.Error -> {}
+                else -> {}
+            }
         }
 
-        val pagerState = rememberPagerState(pageCount = { 1 })
+        LaunchedEffect(planState) {
+            when (planState) {
+                is PlanState.Success -> {}
+                is PlanState.Error -> {}
+                else -> {}
+            }
+        }
+
+
+        // anniversaries 개수에 따른 페이지 state
+        val pagerState = rememberPagerState(pageCount = { anniversaries.size })
+
+        // suspend method 호출을 위한 coroutine scope
         val coroutineScope = rememberCoroutineScope()
 
         Surface(modifier = Modifier.fillMaxSize()) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    // [수정] 커스텀 그라데이션 배경 적용
                     .background(brush = MaterialTheme.customColorScheme.gradientBackground)
             ) {
                 LazyColumn(
@@ -102,7 +101,9 @@ fun HomeScreen() {
                     item {
                         SectionCard(
                             title = "D-DAY",
-                            onAddPressed = { /* D-Day 추가 로직 */ }
+                            onAddPressed = {
+                                showCreateAnniversaryModal = true
+                            }
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 HorizontalPager(
@@ -110,8 +111,8 @@ fun HomeScreen() {
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(160.dp),
-                                ) { page ->
-                                    AnniversaryCard(item = anniversary)
+                                ) { index ->
+                                    AnniversaryCard(item = anniversaries[index])
                                 }
                                 Spacer(modifier = Modifier.height(16.dp))
                                 Row(
@@ -139,7 +140,7 @@ fun HomeScreen() {
                     item {
                         SectionCard(
                             title = "When Date?",
-                            onAddPressed = { /* 데이트 계획 추가 로직 */ }
+                            onAddPressed = {}
                         ) {
                             Column {
                                 plans.forEach { plan ->
@@ -151,5 +152,60 @@ fun HomeScreen() {
                 }
             }
         }
+
+        if (showCreateAnniversaryModal) {
+            CreateAnniversaryModal(
+                onCreate = { title, date ->
+                    Log.d("HomeScreen", "onCreate called with title: $title, date: $date")
+                    showCreateAnniversaryModal = false
+                    anniversaryViewModel.createAnniversary(title, date);
+                },
+                onDismiss = { showCreateAnniversaryModal = false }
+            )
+        }
+
+//        if (showCreatePlanModal) {
+//        }
     }
 }
+
+
+//        // Sample data remains the same...
+//        val ddayItems = remember {
+//            listOf(
+//                DdayItem(title = "우리 만난지", days = "D+924", date = "2022.08.04", emoji = "❤️"),
+//                DdayItem(title = "여행", days = "D-13", date = "2025.04.02", emoji = "✈️"),
+//                DdayItem(title = "1000일", days = "D-76", date = "2025.06.27", emoji = "🎉"),
+//            )
+//        }
+
+//        val datePlans = remember {
+//            listOf(
+//                DatePlanItem(emoji = "🎬", title = "영화 보기", date = "2025년 2월 14일 (수)"),
+//                DatePlanItem(emoji = "🍚", title = "떡도리탕 먹으러 가기", date = "2025년 2월 15일 (목)"),
+//            )
+//        }
+
+//
+//    val anniversary : Anniversary = remember {
+//        Anniversary(
+//            id = 1,
+//            title = "우리 만난지",
+//            date = "2022.08.04",
+//            createdAt = "2025.02.07",
+//            updatedAt = "2025.02.07"
+//        )
+//    }
+//
+//    val plans  = remember {
+//        listOf(
+//            Plan(
+//                id = 1,
+//                topic = "영화 보기",
+//                location = "강남",
+//                time = "2025.04.30",
+//                createdAt = "2025.02.07",
+//                updatedAt = "2025.02.07"
+//            )
+//        )
+//    }

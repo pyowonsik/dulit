@@ -19,3 +19,5 @@ fun PostCoupleDto.toDomain(): com.example.dulit.feature.post.domain.model.PostCo
     )
 }
 
+
+

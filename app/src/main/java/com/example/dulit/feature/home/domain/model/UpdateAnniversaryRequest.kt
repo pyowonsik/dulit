@@ -8,3 +8,5 @@ data class UpdateAnniversaryRequest(
     val date: String? = null  // "2025-02-07" 형식
 )
 
+
+

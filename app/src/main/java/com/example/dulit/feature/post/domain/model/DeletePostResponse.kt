@@ -7,3 +7,5 @@ data class DeletePostResponse(
     val deletedPostId: Int
 )
 
+
+

@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,6 +27,9 @@ class PlanViewModel @Inject constructor(
     private val updatePlanUseCase: UpdatePlanUseCase,
     private val deletePlanUseCase: DeletePlanUseCase
 ) : ViewModel() {
+
+    private val _plans = MutableStateFlow<List<Plan>>(emptyList())
+    val plans: StateFlow<List<Plan>> = _plans.asStateFlow()
 
     private val _planState = MutableStateFlow<PlanState>(PlanState.Idle)
     val planState: StateFlow<PlanState> = _planState.asStateFlow()
@@ -47,7 +51,8 @@ class PlanViewModel @Inject constructor(
 
             result.onSuccess { plan ->
                 Log.d("PlanViewModel", "✅ 계획 생성 성공: ${plan.topic}")
-                _planState.value = PlanState.Success(plan)
+                _plans.value = _plans.value + plan
+                _planState.value = PlanState.Success
             }.onFailure { e ->
                 Log.e("PlanViewModel", "❌ 계획 생성 실패", e)
                 _planState.value = PlanState.Error(e.message ?: "계획 생성에 실패했습니다")
@@ -70,9 +75,10 @@ class PlanViewModel @Inject constructor(
 
             val result = getPlansUseCase(page, take, order, topic)
 
-            result.onSuccess { plans ->
-                Log.d("PlanViewModel", "✅ 계획 ${plans.size}개 조회 성공")
-                _planState.value = PlanState.ListSuccess(plans)
+            result.onSuccess { fetchPlans ->
+                Log.d("PlanViewModel", "✅ 계획 ${fetchPlans.size}개 조회 성공")
+                _plans.value = fetchPlans
+                _planState.value = PlanState.Success
             }.onFailure { e ->
                 Log.e("PlanViewModel", "❌ 계획 조회 실패", e)
                 _planState.value = PlanState.Error(e.message ?: "계획 조회에 실패했습니다")
@@ -92,7 +98,7 @@ class PlanViewModel @Inject constructor(
 
             result.onSuccess { plan ->
                 Log.d("PlanViewModel", "✅ 계획 조회 성공: ${plan.topic}")
-                _planState.value = PlanState.Success(plan)
+                _planState.value = PlanState.Success
             }.onFailure { e ->
                 Log.e("PlanViewModel", "❌ 계획 조회 실패", e)
                 _planState.value = PlanState.Error(e.message ?: "계획 조회에 실패했습니다")
@@ -116,9 +122,12 @@ class PlanViewModel @Inject constructor(
             val request = UpdatePlanRequest(topic = topic, location = location, time = time)
             val result = updatePlanUseCase(planId, request)
 
-            result.onSuccess { plan ->
-                Log.d("PlanViewModel", "✅ 계획 수정 성공: ${plan.topic}")
-                _planState.value = PlanState.Success(plan)
+            result.onSuccess { updatedPlan ->
+                Log.d("PlanViewModel", "✅ 계획 수정 성공: ${updatedPlan.topic}")
+                _plans.value = _plans.value.map { plan ->
+                    if(plan.id == planId) updatedPlan else plan
+                }
+                _planState.value = PlanState.Success
             }.onFailure { e ->
                 Log.e("PlanViewModel", "❌ 계획 수정 실패", e)
                 _planState.value = PlanState.Error(e.message ?: "계획 수정에 실패했습니다")
@@ -138,7 +147,8 @@ class PlanViewModel @Inject constructor(
 
             result.onSuccess { deletedId ->
                 Log.d("PlanViewModel", "✅ 계획 삭제 성공: deletedId=$deletedId")
-                _planState.value = PlanState.DeleteSuccess(deletedId)
+                _plans.value = _plans.value.filter {  it.id != deletedId }
+                _planState.value = PlanState.Success
             }.onFailure { e ->
                 Log.e("PlanViewModel", "❌ 계획 삭제 실패", e)
                 _planState.value = PlanState.Error(e.message ?: "계획 삭제에 실패했습니다")
@@ -160,8 +170,6 @@ class PlanViewModel @Inject constructor(
 sealed class PlanState {
     data object Idle : PlanState()
     data object Loading : PlanState()
-    data class Success(val plan: Plan) : PlanState()
-    data class ListSuccess(val plans: List<Plan>) : PlanState()
-    data class DeleteSuccess(val deletedId: Int) : PlanState()
+    data object Success : PlanState()
     data class Error(val message: String) : PlanState()
 }
