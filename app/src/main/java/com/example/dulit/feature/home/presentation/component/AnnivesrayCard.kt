@@ -124,13 +124,16 @@ fun AnniversaryCard(
                         color = MaterialTheme.colorScheme.primary
                     )
                     Spacer(modifier = Modifier.height(4.dp))
+                    
+                    val dDayText = remember(item.date) { item.getDDayText() }
+
                     Surface(
                         shape = RoundedCornerShape(12.dp),
                         color = Amber200.copy(alpha = 0.3f),
                         modifier = Modifier.padding(top = 2.dp)
                     ) {
                         Text(
-                            text = "D-${calculateDDay(item.date)}",
+                            text = dDayText,
                             style = MaterialTheme.typography.labelMedium,
                             color = Amber200,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -140,10 +143,4 @@ fun AnniversaryCard(
             }
         }
     }
-}
-
-// <CHANGE> Helper function to calculate D-Day
-private fun calculateDDay(date: String): String {
-    // Implement your D-Day calculation logic here
-    return "30"
 }

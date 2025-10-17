@@ -39,8 +39,7 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateAnniversaryModal(
-    onDismiss: () -> Unit,
-    onCreate: (title: String, date: String) -> Unit
+    onDismiss: () -> Unit, onCreate: (title: String, date: String) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -53,24 +52,17 @@ fun CreateAnniversaryModal(
     // 애니메이션 상태
     val infiniteTransition = rememberInfiniteTransition(label = "shimmer")
     val shimmerAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.3f,
-        targetValue = 0.7f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1500, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "shimmer"
+        initialValue = 0.3f, targetValue = 0.7f, animationSpec = infiniteRepeatable(
+            animation = tween(1500, easing = FastOutSlowInEasing), repeatMode = RepeatMode.Reverse
+        ), label = "shimmer"
     )
 
     // DatePicker 상태
     val calendar = Calendar.getInstance()
 
     Dialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            usePlatformDefaultWidth = false,
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true
+        onDismissRequest = onDismiss, properties = DialogProperties(
+            usePlatformDefaultWidth = false, dismissOnBackPress = true, dismissOnClickOutside = true
         )
     ) {
         Box(
@@ -86,9 +78,7 @@ fun CreateAnniversaryModal(
                         shape = RoundedCornerShape(32.dp),
                         ambientColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
                         spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
-                    ),
-                shape = RoundedCornerShape(32.dp),
-                colors = CardDefaults.cardColors(
+                    ), shape = RoundedCornerShape(32.dp), colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surface
                 )
             ) {
@@ -127,8 +117,7 @@ fun CreateAnniversaryModal(
                                                 MaterialTheme.colorScheme.tertiary.copy(alpha = shimmerAlpha)
                                             )
                                         )
-                                    ),
-                                contentAlignment = Alignment.Center
+                                    ), contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Favorite,
@@ -205,8 +194,7 @@ fun CreateAnniversaryModal(
                                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                                     ) {
                                         Text(
-                                            "⚠️",
-                                            style = MaterialTheme.typography.bodySmall
+                                            "⚠️", style = MaterialTheme.typography.bodySmall
                                         )
                                         Text(
                                             "기념일 이름을 입력해주세요",
@@ -221,13 +209,16 @@ fun CreateAnniversaryModal(
                                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                                 focusedLabelColor = MaterialTheme.colorScheme.primary,
                                 unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
-                                focusedContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.08f),
-                                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                                focusedContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(
+                                    alpha = 0.08f
+                                ),
+                                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(
+                                    alpha = 0.3f
+                                )
                             ),
                             textStyle = MaterialTheme.typography.bodyLarge.copy(
                                 fontWeight = FontWeight.Medium
-                            )
-                        )
+                            ))
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -246,18 +237,19 @@ fun CreateAnniversaryModal(
                         Surface(
                             onClick = {
                                 val year = selectedDate?.year ?: calendar.get(Calendar.YEAR)
-                                val month = selectedDate?.monthValue?.minus(1) ?: calendar.get(Calendar.MONTH)
-                                val day = selectedDate?.dayOfMonth ?: calendar.get(Calendar.DAY_OF_MONTH)
+                                val month = selectedDate?.monthValue?.minus(1) ?: calendar.get(
+                                    Calendar.MONTH
+                                )
+                                val day =
+                                    selectedDate?.dayOfMonth ?: calendar.get(Calendar.DAY_OF_MONTH)
 
                                 DatePickerDialog(
-                                    context,
-                                    { _, selectedYear, selectedMonth, selectedDay ->
-                                        selectedDate = LocalDate.of(selectedYear, selectedMonth + 1, selectedDay)
+                                    context, { _, selectedYear, selectedMonth, selectedDay ->
+                                        selectedDate = LocalDate.of(
+                                            selectedYear, selectedMonth + 1, selectedDay
+                                        )
                                         dateError = false
-                                    },
-                                    year,
-                                    month,
-                                    day
+                                    }, year, month, day
                                 ).show()
                             },
                             modifier = Modifier
@@ -278,13 +270,19 @@ fun CreateAnniversaryModal(
                                 )
                             } else if (selectedDate != null) {
                                 ButtonDefaults.outlinedButtonBorder.copy(
-                                    width = 1.5.dp,
-                                    brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))
+                                    width = 1.5.dp, brush = androidx.compose.ui.graphics.SolidColor(
+                                        MaterialTheme.colorScheme.primary.copy(
+                                            alpha = 0.5f
+                                        )
+                                    )
                                 )
                             } else {
                                 ButtonDefaults.outlinedButtonBorder.copy(
-                                    width = 1.dp,
-                                    brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
+                                    width = 1.dp, brush = androidx.compose.ui.graphics.SolidColor(
+                                        MaterialTheme.colorScheme.outline.copy(
+                                            alpha = 0.3f
+                                        )
+                                    )
                                 )
                             }
                         ) {
@@ -298,24 +296,21 @@ fun CreateAnniversaryModal(
                                 Column(
                                     verticalArrangement = Arrangement.Center
                                 ) {
-                                    Text(
-                                        text = selectedDate?.let {
-                                            it.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"))
-                                        } ?: "날짜를 선택해주세요",
+                                    Text(text = selectedDate?.let {
+                                        it.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"))
+                                    } ?: "날짜를 선택해주세요",
                                         style = MaterialTheme.typography.bodyLarge,
                                         fontWeight = if (selectedDate != null) FontWeight.SemiBold else FontWeight.Normal,
                                         color = if (selectedDate != null) {
                                             MaterialTheme.colorScheme.onSurface
                                         } else {
                                             MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                                        }
-                                    )
+                                        })
 
                                     if (selectedDate != null) {
                                         Text(
                                             text = selectedDate!!.dayOfWeek.getDisplayName(
-                                                java.time.format.TextStyle.FULL,
-                                                Locale.KOREAN
+                                                java.time.format.TextStyle.FULL, Locale.KOREAN
                                             ),
                                             style = MaterialTheme.typography.bodySmall,
                                             color = MaterialTheme.colorScheme.primary
@@ -354,8 +349,7 @@ fun CreateAnniversaryModal(
                                 modifier = Modifier.padding(start = 4.dp, top = 4.dp)
                             ) {
                                 Text(
-                                    "⚠️",
-                                    style = MaterialTheme.typography.bodySmall
+                                    "⚠️", style = MaterialTheme.typography.bodySmall
                                 )
                                 Text(
                                     text = "날짜를 선택해주세요",
@@ -375,36 +369,34 @@ fun CreateAnniversaryModal(
                     ) {
                         // 취소 버튼
                         CancelButton(
-                            onCancel = onDismiss,
-                            modifier = Modifier.weight(1f)
+                            onCancel = onDismiss, modifier = Modifier.weight(1f)
                         )
 
                         // 생성 버튼
-                       ConfirmButton(
-                           onClick = {
-                               // 유효성 검사
-                               var hasError = false
+                        ConfirmButton(
+                            onClick = {
+                                // 유효성 검사
+                                var hasError = false
 
-                               if (title.isBlank()) {
-                                   titleError = true
-                                   hasError = true
-                               }
+                                if (title.isBlank()) {
+                                    titleError = true
+                                    hasError = true
+                                }
 
-                               if (selectedDate == null) {
-                                   dateError = true
-                                   hasError = true
-                               }
+                                if (selectedDate == null) {
+                                    dateError = true
+                                    hasError = true
+                                }
 
-                               if (!hasError) {
-                                   // ISO 8601 형식으로 변환
-                                   val formattedDate = selectedDate!!.format(
-                                       DateTimeFormatter.ISO_LOCAL_DATE
-                                   )
-                                   onCreate(title.trim(), formattedDate)
-                               }
-                           },
-                           modifier = Modifier.weight(1f)
-                       )
+                                if (!hasError) {
+                                    // ISO 8601 형식으로 변환
+                                    val formattedDate = selectedDate!!.format(
+                                        DateTimeFormatter.ISO_LOCAL_DATE
+                                    )
+                                    onCreate(title.trim(), formattedDate)
+                                }
+                            }, modifier = Modifier.weight(1f)
+                        )
                     }
                 }
             }
