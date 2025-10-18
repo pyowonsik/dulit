@@ -18,14 +18,12 @@ interface AnniversaryApi {
     ): Response<AnniversaryResponseDto>
 
     /**
-     * 전체 기념일 조회 (페이지네이션)
-     * GET /couple/anniversary?page=1&take=10&order=ASC&title=
+     * 전체 기념일 조회
+     * GET /couple/anniversary?title=검색어 (선택사항)
+     * 백엔드에서 날짜순(ASC)으로 자동 정렬됨
      */
     @GET("/couple/anniversary")
     suspend fun findAllAnniversaries(
-        @Query("page") page: Int? = null,
-        @Query("take") take: Int? = null,
-        @Query("order") order: String? = null,
         @Query("title") title: String? = null
     ): Response<List<AnniversaryResponseDto>>
 

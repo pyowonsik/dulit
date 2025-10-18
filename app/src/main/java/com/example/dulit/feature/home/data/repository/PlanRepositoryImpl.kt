@@ -29,13 +29,10 @@ class PlanRepositoryImpl @Inject constructor(
     }
 
     override suspend fun findAllPlans(
-        page: Int?,
-        take: Int?,
-        order: String?,
         topic: String?
     ): Result<List<Plan>> = runCatching {
-        Log.d("PlanRepository", "약속 전체 조회 API 호출 (page=$page, take=$take, order=$order, topic=$topic)")
-        val response = planApi.findAllPlans(page, take, order, topic)
+        Log.d("PlanRepository", "약속 전체 조회 API 호출${if (topic != null) " (topic=$topic)" else ""}")
+        val response = planApi.findAllPlans(topic)
         if (!response.isSuccessful || response.body() == null) {
             Log.e("PlanRepository", "❌ 약속 조회 실패: ${response.code()}")
             throw Exception("약속 조회 실패: ${response.code()}")

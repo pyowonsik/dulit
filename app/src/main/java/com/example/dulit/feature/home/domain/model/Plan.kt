@@ -1,6 +1,8 @@
 package com.example.dulit.feature.home.domain.model
 
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
@@ -16,10 +18,17 @@ data class Plan(
     val updatedAt: String
 ) {
     /**
-     * 약속 시간을 LocalDateTime으로 변환
+     * 약속 시간을 LocalDateTime으로 변환 (UTC → 한국 시간)
      */
     fun getLocalDateTime(): LocalDateTime {
-        return LocalDateTime.parse(time.removeSuffix("Z"), DateTimeFormatter.ISO_DATE_TIME)
+        return try {
+            // ISO 8601 UTC 시간 파싱 후 한국 시간(Asia/Seoul)으로 변환
+            val instant = Instant.parse(time)
+            instant.atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime()
+        } catch (e: Exception) {
+            // Fallback: Z 없는 형식도 처리
+            LocalDateTime.parse(time.removeSuffix("Z"), DateTimeFormatter.ISO_DATE_TIME)
+        }
     }
 
     /**
@@ -121,6 +130,8 @@ data class Plan(
             return now.toLocalDate() == planTime.toLocalDate()
         }
 }
+
+
 
 
 

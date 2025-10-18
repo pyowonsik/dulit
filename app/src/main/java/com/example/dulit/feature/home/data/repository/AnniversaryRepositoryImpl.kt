@@ -29,13 +29,10 @@ class AnniversaryRepositoryImpl @Inject constructor(
     }
 
     override suspend fun findAllAnniversaries(
-        page: Int?,
-        take: Int?,
-        order: String?,
         title: String?
     ): Result<List<Anniversary>> = runCatching {
-        Log.d("AnniversaryRepository", "기념일 전체 조회 API 호출 (page=$page, take=$take, order=$order, title=$title)")
-        val response = anniversaryApi.findAllAnniversaries(page, take, order, title)
+        Log.d("AnniversaryRepository", "기념일 전체 조회 API 호출${if (title != null) " (title=$title)" else ""}")
+        val response = anniversaryApi.findAllAnniversaries(title)
         if (!response.isSuccessful || response.body() == null) {
             Log.e("AnniversaryRepository", "❌ 기념일 조회 실패: ${response.code()}")
             throw Exception("기념일 조회 실패: ${response.code()}")

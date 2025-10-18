@@ -18,14 +18,12 @@ interface PlanApi {
     ): Response<PlanResponseDto>
 
     /**
-     * 전체 약속 조회 (페이지네이션)
-     * GET /couple/plan?page=1&take=10&order=ASC&topic=
+     * 전체 약속 조회
+     * GET /couple/plan?topic=검색어 (선택사항)
+     * 백엔드에서 시간순(ASC)으로 자동 정렬됨
      */
     @GET("/couple/plan")
     suspend fun findAllPlans(
-        @Query("page") page: Int? = null,
-        @Query("take") take: Int? = null,
-        @Query("order") order: String? = null,
         @Query("topic") topic: String? = null
     ): Response<List<PlanResponseDto>>
 

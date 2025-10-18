@@ -16,15 +16,10 @@ interface AnniversaryRepository {
     
     /**
      * 전체 기념일 조회
-     * @param page 페이지 번호 (optional)
-     * @param take 가져올 개수 (optional)
-     * @param order 정렬 순서 (ASC/DESC, optional)
-     * @param title 제목 필터 (optional)
+     * @param title 제목 검색 (optional)
+     * @return 날짜순(ASC)으로 정렬된 전체 기념일 리스트
      */
     suspend fun findAllAnniversaries(
-        page: Int? = null,
-        take: Int? = null,
-        order: String? = null,
         title: String? = null
     ): Result<List<Anniversary>>
     

@@ -6,19 +6,19 @@ import javax.inject.Inject
 
 /**
  * 전체 약속 조회 UseCase
+ * 백엔드에서 시간순(ASC)으로 정렬된 전체 약속을 반환
  */
 class GetPlansUseCase @Inject constructor(
     private val planRepository: PlanRepository
 ) {
     suspend operator fun invoke(
-        page: Int? = null,
-        take: Int? = null,
-        order: String? = null,
         topic: String? = null
     ): Result<List<Plan>> {
-        return planRepository.findAllPlans(page, take, order, topic)
+        return planRepository.findAllPlans(topic)
     }
 }
+
+
 
 
 

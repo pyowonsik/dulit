@@ -60,19 +60,16 @@ class AnniversaryViewModel @Inject constructor(
     }
 
     /**
-     * 기념일 전체 조회
+     * 기념일 전체 조회 (백엔드에서 날짜순 정렬)
      */
     fun getAnniversaries(
-        page: Int? = null,
-        take: Int? = null,
-        order: String? = null,
         title: String? = null
     ) {
         viewModelScope.launch {
             _anniversaryState.value = AnniversaryState.Loading
-            Log.d("AnniversaryViewModel", "기념일 전체 조회 시작")
+            Log.d("AnniversaryViewModel", "기념일 전체 조회 시작${if (title != null) " (title=$title)" else ""}")
 
-            val result = getAnniversariesUseCase(page, take, order, title)
+            val result = getAnniversariesUseCase(title)
 
             result.onSuccess { fetchedAnniversaries ->
                 Log.d("AnniversaryViewModel", "✅ 기념일 ${fetchedAnniversaries.size}개 조회 성공")

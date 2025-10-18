@@ -28,6 +28,7 @@ import com.example.dulit.core.ui.theme.customColorScheme
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -543,12 +544,13 @@ fun CreatePlanModal(
                                }
 
                                if (!hasError) {
-                                   // LocalDateTime 생성 및 ISO 형식으로 변환
+                                   // LocalDateTime 생성 후 한국 시간 → UTC로 변환
                                    val dateTime = LocalDateTime.of(selectedDate!!, selectedTime!!)
-                                   val formattedDateTime = dateTime.format(
-                                       DateTimeFormatter.ISO_LOCAL_DATE_TIME
-                                   )
-                                   onCreate(topic.trim(), location.trim(), formattedDateTime)
+                                   val utcDateTime = dateTime
+                                       .atZone(ZoneId.of("Asia/Seoul"))  // 한국 시간대 지정
+                                       .toInstant()  // UTC로 변환
+                                       .toString()  // ISO 8601 UTC 형식: "2025-10-25T07:53:00Z"
+                                   onCreate(topic.trim(), location.trim(), utcDateTime)
                                }
                            },
                            modifier = Modifier.weight(1f)

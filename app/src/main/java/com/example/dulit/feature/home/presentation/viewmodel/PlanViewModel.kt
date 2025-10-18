@@ -61,19 +61,16 @@ class PlanViewModel @Inject constructor(
     }
 
     /**
-     * 계획 전체 조회
+     * 계획 전체 조회 (백엔드에서 시간순 정렬)
      */
     fun getPlans(
-        page: Int? = null,
-        take: Int? = null,
-        order: String? = null,
         topic: String? = null
     ) {
         viewModelScope.launch {
             _planState.value = PlanState.Loading
-            Log.d("PlanViewModel", "계획 전체 조회 시작")
+            Log.d("PlanViewModel", "계획 전체 조회 시작${if (topic != null) " (topic=$topic)" else ""}")
 
-            val result = getPlansUseCase(page, take, order, topic)
+            val result = getPlansUseCase(topic)
 
             result.onSuccess { fetchPlans ->
                 Log.d("PlanViewModel", "✅ 계획 ${fetchPlans.size}개 조회 성공")

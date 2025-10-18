@@ -16,15 +16,10 @@ interface PlanRepository {
     
     /**
      * 전체 약속 조회
-     * @param page 페이지 번호 (optional)
-     * @param take 가져올 개수 (optional)
-     * @param order 정렬 순서 (ASC/DESC, optional)
-     * @param topic 주제 필터 (optional)
+     * @param topic 주제 검색 (optional)
+     * @return 시간순(ASC)으로 정렬된 전체 약속 리스트
      */
     suspend fun findAllPlans(
-        page: Int? = null,
-        take: Int? = null,
-        order: String? = null,
         topic: String? = null
     ): Result<List<Plan>>
     

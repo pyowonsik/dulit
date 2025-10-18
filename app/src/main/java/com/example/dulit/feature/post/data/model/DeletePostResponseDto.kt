@@ -22,3 +22,5 @@ fun DeletePostResponseDto.toDomain(): com.example.dulit.feature.post.domain.mode
 
 
 
+
+

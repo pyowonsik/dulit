@@ -6,19 +6,19 @@ import javax.inject.Inject
 
 /**
  * 전체 기념일 조회 UseCase
+ * 백엔드에서 날짜순(ASC)으로 정렬된 전체 기념일을 반환
  */
 class GetAnniversariesUseCase @Inject constructor(
     private val anniversaryRepository: AnniversaryRepository
 ) {
     suspend operator fun invoke(
-        page: Int? = null,
-        take: Int? = null,
-        order: String? = null,
         title: String? = null
     ): Result<List<Anniversary>> {
-        return anniversaryRepository.findAllAnniversaries(page, take, order, title)
+        return anniversaryRepository.findAllAnniversaries(title)
     }
 }
+
+
 
 
 
