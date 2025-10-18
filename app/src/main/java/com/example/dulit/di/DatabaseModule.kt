@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.example.dulit.core.local.database.AppDatabase
 import com.example.dulit.feature.home.data.local.dao.AnniversaryDao
 import com.example.dulit.feature.calendar.data.local.dao.CalendarDao
+import com.example.dulit.feature.home.data.local.dao.PlanDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,5 +42,11 @@ object DatabaseModule {
     @Singleton
     fun provideCalendarDao(database: AppDatabase): CalendarDao {
         return database.calendarDao()
+    }
+
+    @Provides
+    @Singleton
+    fun providePlanDao(database: AppDatabase) : PlanDao {
+        return database.planDao()
     }
 }
