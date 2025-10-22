@@ -9,7 +9,7 @@
 [![GitHub](https://img.shields.io/badge/GitHub-pyowonsik-181717?style=flat-square&logo=github)](https://github.com/pyowonsik/Dulit-android)
 [![Backend](https://img.shields.io/badge/Backend-Dulit--server-3DDC84?style=flat-square&logo=nestjs)](https://github.com/pyowonsik/Dulit-server)
 
-**개발 기간**: 2025.01 ~ 진행중
+**개발 기간**: 2025.10 ~ 진행중
 
 </div>
 
@@ -30,15 +30,21 @@
 ## 📱 스크린샷
 
 <p align="center">
-  <img src="./readme_source/screenshot_1.png" width="200">
-  <img src="./readme_source/screenshot_2.png" width="200">
-  <img src="./readme_source/screenshot_3.png" width="200">
+  <img src="./readme_source/login.jpeg" width="200">
+  <img src="./readme_source/connect_modal.jpeg" width="200">
+  <img src="./readme_source/main.jpeg" width="200">
 </p>
 
 <p align="center">
-  <img src="./readme_source/screenshot_4.png" width="200">
-  <img src="./readme_source/screenshot_5.png" width="200">
-  <img src="./readme_source/screenshot_6.png" width="200">
+  <img src="./readme_source/calendar.jpeg" width="200">
+  <img src="./readme_source/add_calendar.jpeg" width="200">
+  <img src="./readme_source/plan_list.jpeg" width="200">
+</p>
+
+<p align="center">
+  <img src="./readme_source/post.jpeg" width="200">
+  <img src="./readme_source/chat.jpeg" width="200">
+  <img src="./readme_source/profile.jpeg" width="200">
 </p>
 
 ---
