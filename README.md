@@ -2,8 +2,6 @@
 
 <div align="center">
 
-![App Icon](./readme_source/app_icon.png)
-
 **Clean Architecture 기반 Android Native 프로젝트**
 
 [![GitHub](https://img.shields.io/badge/GitHub-pyowonsik-181717?style=flat-square&logo=github)](https://github.com/pyowonsik/Dulit-android)
