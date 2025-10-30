@@ -62,6 +62,7 @@ fun HomeScreen(
         // 모달 관리 boolean 변수
         var showCreateAnniversaryModal by remember { mutableStateOf(false) }
         var showCreatePlanModal by remember { mutableStateOf(false) }
+        var showUpdateAnniversaryModal by remember { mutableStateOf(false)}
         var showAllAnniversariesModal by remember { mutableStateOf(false) }
         var showAllPlansModal by remember { mutableStateOf(false) }
 
@@ -151,8 +152,21 @@ fun HomeScreen(
                                                 // 실제 데이터 표시 (0~4번째)
                                                 AnniversaryCard(
                                                     item = anniversaries[index],
-                                                    modifier = Modifier.fillMaxWidth()
-                                                )
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    onEdit = { anniversary ->
+                                                        Log.d(
+                                                            "HomeScreen",
+                                                            anniversary.toString()
+                                                        )
+                                                        showUpdateAnniversaryModal = true
+                                                    },
+                                                    onDelete = { anniversary ->
+                                                        Log.d(
+                                                            "HomeScreen",
+                                                            anniversary.toString()
+                                                        )
+                                                        anniversaryViewModel.deleteAnniversary(anniversary.id)
+                                                    })
                                             } else if (index == 5 && anniversaries.size > 5) {
                                                 // 더보기 카드 표시 (5번째)
                                                 MoreCard(
@@ -224,6 +238,19 @@ fun HomeScreen(
             }, onDismiss = { showCreateAnniversaryModal = false })
         }
 
+
+        if(showUpdateAnniversaryModal){
+            CreateAnniversaryModal(onCreate = { title, date ->
+                Log.d(
+                    "HomeScreen", "onCreateAnniversary called with title: $title, date: $date"
+                )
+//                anniversaryViewModel.createAnniversary(title, date)
+                showUpdateAnniversaryModal = false
+            }, onDismiss = { showUpdateAnniversaryModal = false })
+        }
+
+
+
         if (showCreatePlanModal) {
             CreatePlanModal(onCreate = { topic, location, dateTime ->
                 Log.d(
@@ -235,9 +262,11 @@ fun HomeScreen(
             }, onDismiss = { showCreatePlanModal = false })
         }
 
+
         if (showAllAnniversariesModal) {
             ViewAllAnniversariesModal(
                 anniversaries = anniversaries,
+                anniversaryViewModel = anniversaryViewModel,
                 onDismiss = {
                     showAllAnniversariesModal = false
                 })
@@ -245,9 +274,7 @@ fun HomeScreen(
 
         if (showAllPlansModal) {
             ViewAllPlansModal(
-                plans = plans,
-                onDismiss = { showAllPlansModal = false }
-            )
+                plans = plans, onDismiss = { showAllPlansModal = false })
         }
     }
 }

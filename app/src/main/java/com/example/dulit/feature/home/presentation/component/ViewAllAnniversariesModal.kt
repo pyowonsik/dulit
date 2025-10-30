@@ -1,5 +1,6 @@
 package com.example.dulit.feature.home.presentation.component
 
+import android.util.Log
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,10 +23,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.dulit.feature.home.domain.model.Anniversary
+import com.example.dulit.feature.home.presentation.viewmodel.AnniversaryViewModel
 
 @Composable
 fun ViewAllAnniversariesModal(
     anniversaries: List<Anniversary>,
+    anniversaryViewModel: AnniversaryViewModel,
     onDismiss: () -> Unit
 ) {
     // <CHANGE> Added heartbeat animation for header icon
@@ -170,7 +173,14 @@ fun ViewAllAnniversariesModal(
                         items(anniversaries) { anniversary ->
                             AnniversaryCard(
                                 item = anniversary,
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth(),
+                                onEdit = { anniversary ->
+                                    Log.d("ViewAllAnniversariesModal",anniversary.toString())
+                                },
+                                onDelete = { anniversary ->
+                                    Log.d("ViewAllAnniversariesModal",anniversary.toString())
+                                    anniversaryViewModel.deleteAnniversary(anniversary.id)
+                                }
                             )
                         }
                     }

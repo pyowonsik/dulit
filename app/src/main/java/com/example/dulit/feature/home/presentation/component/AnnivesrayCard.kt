@@ -1,11 +1,15 @@
 package com.example.dulit.feature.home.presentation.component
 
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,11 +24,17 @@ import androidx.compose.ui.unit.sp
 import com.example.dulit.core.ui.theme.Amber200
 import com.example.dulit.feature.home.domain.model.Anniversary
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AnniversaryCard(
     item: Anniversary,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onEdit: (Anniversary) -> Unit,
+    onDelete: (Anniversary) -> Unit
 ) {
+    // DropdownMenu 상태 관리
+    var showContextMenu by remember { mutableStateOf(false) }
+
     // <CHANGE> Added heartbeat animation for the icon
     val infiniteTransition = rememberInfiniteTransition(label = "heartbeat")
     val scale by infiniteTransition.animateFloat(
@@ -37,30 +47,35 @@ fun AnniversaryCard(
         label = "scale"
     )
 
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 8.dp),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
-    ) {
-        // <CHANGE> Added gradient background overlay
-        Box(
-            modifier = Modifier
+    Box {
+        Card(
+            modifier = modifier
                 .fillMaxWidth()
-                .background(
-                    Brush.horizontalGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
-                            MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.2f)
+                .padding(horizontal = 8.dp, vertical = 8.dp)
+                .combinedClickable(
+                    onClick = { /* 일반 클릭 - 필요시 처리 */ },
+                    onLongClick = { showContextMenu = true }
+                ),
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+        ) {
+            // <CHANGE> Added gradient background overlay
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        Brush.horizontalGradient(
+                            colors = listOf(
+                                MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
+                                MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.2f)
+                            )
                         )
                     )
-                )
-                .padding(20.dp)
-        ) {
+                    .padding(20.dp)
+            ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -143,4 +158,58 @@ fun AnniversaryCard(
             }
         }
     }
+
+        // 컨텍스트 메뉴 (Long Press 시 표시)
+        DropdownMenu(
+            expanded = showContextMenu,
+            onDismissRequest = { showContextMenu = false }
+        ) {
+            // 수정 메뉴 아이템
+            DropdownMenuItem(
+                text = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "수정",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text("수정")
+                    }
+                },
+                onClick = {
+                    showContextMenu = false
+                    onEdit(item)
+                }
+            )
+
+            // 삭제 메뉴 아이템
+            DropdownMenuItem(
+                text = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "삭제",
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                        Text(
+                            "삭제",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                },
+                onClick = {
+                    showContextMenu = false
+                    onDelete(item)
+                }
+            )
+        }
+    }
+
+
 }
